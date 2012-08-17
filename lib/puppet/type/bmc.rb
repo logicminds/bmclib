@@ -1,10 +1,7 @@
 Puppet::Type.newtype(:bmc) do
-    
-
   @doc = "Manage BMC devices"
     
-    #feature :installable, "The provider can install packages.",
-    #:methods => [:install]
+
   ensurable
 
     newparam(:user1) do
@@ -45,8 +42,12 @@ Puppet::Type.newtype(:bmc) do
                when "hp", "hewlett packard"
                     resource[:provider] = "hp"
                 # check if hp's ilo driver is installed
+                   if not File.exists?('/dev/hpilo/dXccbN')
+                     raise ArgumentError , "The hp ilo driver cannot be found, is the ilo driver installed and loaded?"
+                   end
                else
-                    raise ArgumentError , "The manufacturer \"#{$manufacturer}\" is currently not supported under the oem provider, please try freeipmi or ipmitool"
+                    raise ArgumentError , "The manufacturer \"#{$manufacturer}\" is currently not
+                              supported under the oem provider, please try freeipmi or ipmitool"
             end
 
                 
@@ -58,11 +59,23 @@ Puppet::Type.newtype(:bmc) do
     newparam(:ipsource) do
         desc "The type of ip address to use static or dhcp"
         newvalues(:static, :dhcp)
+        if resources[:ipsource].nil? and resources[:ip] and resources[:gateway] and resources[:subnet]
+          defaultto{:static}
+        else
+          defaultto{:dhcp}
+        end
+
         
     end
-    
-    
-    newparam(:ip) do
+
+        newparam(:snmp) do
+          desc "The snmp community string for the bmc device"
+
+
+        end
+
+
+        newparam(:ip) do
         desc "The ip address of the bmc device"
         validate do |value|
             unless validaddr?(value)
@@ -103,21 +116,11 @@ Puppet::Type.newtype(:bmc) do
         end
     end
     
-    newparam(:channel) do
-        desc "The lan channel to use to configure the bmc device"
-        # "1 == local ipmi driver"
-        # "2 == lan support (requires credentials and IP)"
-        validate do |value|
-            unless (1..2).include?(value.to_i)
-                # default channel to use
-                resource[:channel] = 1
-            end
-        end
-    end
-    
+
     newparam(:vlanid) do
+      defaultto {"off"}
         validate do |value|
-            unless (1..4094).include?(value.to_i)
+            unless (1..4094).include?(value.to_i) or value == "off"
                 raise ArgumentError , "%s is not a valid vlan id, must be 1-4094" % value
             end
         end
