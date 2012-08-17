@@ -3,35 +3,57 @@ Puppet::Type.type(:bmc).provider(:freeipmi) do
 
     commands :ipmitool
     @users = {}
-
+    @channel = 1
+    @priv = {
+        :admin => 4,
+        :user => 2,
+        :callback => 1,
+        :operator => 3,
+    }
     def create
-      userid = getuserid(params[:username])
-      ipmitool user enable 3
-      ipmitool user set name 3 admin3
-      ipmitool user set password 3 password
-      ipmitool user priv resource[:userid] 4 2
 
+      user = resources[:username]
+      id = userid(user)
+      if not userexists?(user)
+        ipmitool "user set name", id, user
+        ipmitool "user set password", id, resource[:password]
+        ipmitool "user priv", id, @priv[resource[:privlevel]], @channel
+        ipmitool "user enable", id
 
-    #  1 Callback level
-    #  2 User level
-    #  3 Operator level
-    #  4 Administrator level
-    #  5 OEM Proprietary level
+      else
+        if not isenabled?(user)
+          ipmitool "user enable", id
+        end
+        if not privequal?(user)
+          ipmitool "user priv", id, @priv[resource[:privlevel]], @channel
+        end
+        if resource[:force]
+          ipmitool "user set password", id, resource[:password]
+        end
+
+      end
+
     end
 
     def destroy
+      ipmitool "user set name", id, user
+      ipmitool "user priv", id, @priv[:callback], @channel
+      ipmitool "user disable", id
+    end
+
+    def privequal?(user)
+      privlevel?(user) == @priv[resource[:privlevel]]
 
     end
 
     def exists?
        if userexists?(resource[:username])
          value = userlist[:username][:enabled]
-         value = value & userlist[:username][:priv].downcase! == resource[:privlevel].downcase!
-
+         value = value & privequal?(resource[:username) & ! resource[:force]
        else
           return false
        end
-
+      return value
     end
 
     def newuserid
@@ -52,8 +74,12 @@ Puppet::Type.type(:bmc).provider(:freeipmi) do
       return userlist[user][:enabled]
     end
 
-    def getuserid(user)
-      return userlist[user][:id]
+    def userid(user)
+      if userlist[user][:id]
+        return userlist[user][:id]
+      else
+        return newuserid
+      end
     end
 
     def userlist
@@ -62,6 +88,10 @@ Puppet::Type.type(:bmc).provider(:freeipmi) do
         @users = parse(userdata)
       end
       return @users
+    end
+
+    def privlevel?(user)
+      return userlist[user][:priv].downcase
     end
 
     def userexists?(user)

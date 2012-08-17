@@ -19,13 +19,20 @@ Puppet::Type.newtype(:bmc) do
 
     end
 
+    newparam(:force) do
+          desc "The force parameter will set the password of the user with every puppet run"
+          newvalues(true, false)
+    end
 
-
+    newparam(:privlevel) do
+          desc "The public certificate of the user"
+          newvalues(:admin, :user, :operator, :callback)
+      end
 
     newparam(:provider) do
         desc "The type of ipmi provider to use when setting up the bmc"
         if $is_virtual
-            raise ArgumentError , "Virtual machines do not have an ipmi device, please do not try to assign use the bmc type with virtual machines"
+            raise ArgumentError , "Virtual machines do not have an ipmi device, please do not use the bmc type with virtual machines"
         end
         resource[:provider] = "ipmitool" if provider.nil?
         provider = resource[:provider].downcase

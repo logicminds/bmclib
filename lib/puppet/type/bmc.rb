@@ -12,7 +12,6 @@ Puppet::Type.newtype(:bmc) do
     newparam(:user1pass) do
         desc "The password of the user1 to create"
         
-        
     end
     
     
