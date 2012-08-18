@@ -1,4 +1,4 @@
-Puppet::Type.newtype(:bmc) do
+Puppet::Type.newtype(:bmcuser) do
   @doc = "Manage BMC devices"
 
 
@@ -11,11 +11,6 @@ Puppet::Type.newtype(:bmc) do
 
     newparam(:userpass) do
         desc "The password of the user to create"
-
-    end
-
-    newparam(:usercert) do
-        desc "The public certificate of the user"
 
     end
 

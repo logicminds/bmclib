@@ -1,72 +1,116 @@
-Puppet::Type.type(:bmc).provider(:freeipmi) do
-    desc "Provides Freeipmi support for the bmc type"
-    
-    commands :ipmitool
-    
-    
-    def create
-        ipmitool "lan set #{resource[:channel} ipsrc", resource[:ipsource]
-        if resource[:ipsource] == "static"
-          ipmitool "lan set 1 ipaddr", resource[:ip]
-          ipmitool "lan set 1 netmask", resource[:subnet]
-          ipmitool "lan set 1 defgw", resource[:gateway]
-          ipmitool "lan set 1 snmp", resource[:snmp]
-        end
-        if resource[:vlanid]
-          ipmitool "lan set 1 vlan id", resource[:vlanid]
-        end
-        if resource[:bootdev]
-          ipmitool "chassis bootdev", resource[:bootdev]
-        end
-        if resource[:user1] and resource[:user1pass]
+Puppet::Type.type(:bmc).provider(:ipmitool) do
+  desc "Provides Freeipmi support for the bmc type"
 
-        end
+  commands :ipmitool
 
 
-
+  def create
+    if resource[:ipsource] == "static"
+      ip = resource[:ip]
+      netmask = resource[:netmask]
+      gateway = resource[:gateway]
+    end
+    if resource[:snmp]
+        snmp = resource[:snmp]
+    end
+    ipsrc = resource[:ipsource]
+    if resource[:vlanid]
+      vlanid = resource[:vlanid]
     end
 
-def destroy
+  end
 
-end
+  def destroy
 
-def getuserlist
-  # get the user list and parse the results
-end
+  end
 
-def checkuser
+  def exists?
+     value = ip.eql?(resource[:ip]) &
+  end
 
-end
+  def lanconfig
+    @lanconfig ||= parse_laninfo
+  end
 
-def exists?
-  @laninfo = ipmitool "lan print 1"
+  def parse_laninfo
+    landata = ipmitool 'lan print 1'
+    laninfo = {}
 
-
-end
-
-    def parse(landata)
-
-      multikey = ""
-      multivalue = {}
-
-      landata.lines.each do |line|
-        # clean up the data from spaces
-        item = line.split(':', 2)
-        key = item.first.strip.downcase
-        value = item.last.strip
-        @laninfo[key] = value
-
-      end
-      return @laninfo
+    landata.lines.each do |line|
+      # clean up the data from spaces
+      item = line.split(':', 2)
+      key = item.first.strip.downcase
+      value = item.last.strip
+      laninfo[key] = value
     end
+    return laninfo
+  end
+
+  def bootdev
+
+  end
+
+  def bootdev=(device)
+    ipmitool 'chassis'
+  end
+
+  def ip
+    lanconfig["ip address"]
+  end
+
+  def mac
+    lanconfig["mac address"]
+  end
+
+  def subnet
+    lanconfig["subnet mask"]
+  end
+
+  def gateway
+    lanconfig["default gateway ip"]
+  end
+
+  def vlanid
+    lanconfig["802.1q vlan id"]
+  end
+
+  def dhcp?
+    lanconfig["ip address source"].match(/dhcp/i) != nil
+  end
+
+  def static?
+    lanconfig["ip address source"].match(/static/i) != nil
+  end
+
+  def ipsrc
+    lanconfig["ip address source"].downcase!
+  end
+
+  def ipsrc=(source)
+    ipmitool 'lan set 1 ipsrc', source
+  end
+
+  def snmp=(community)
+    ipmitool 'lan set 1 snmp', community
+  end
+
+  def ip=(address)
+    ipmitool 'lan set 1 ipaddr', address
+  end
+
+  def subnet(subnet)
+    ipmitool 'lan set 1 netmask', subnet
+  end
+
+  def gateway=(address)
+    ipmitool 'lan set 1 defgw ipaddr', address
+  end
+
+  def vlanid=(vid)
+     ipmitool 'lan set 1 vlan id', vid
+  end
 
 
-# Display/reset password for default root user (userid '2')
-ipmitool user list 1
-ipmitool user set password 2 <new_password>
-
-# Display/configure lan settings
-ipmitool lan print 1
 
 
 end

@@ -18,12 +18,8 @@ bmc{"ipmidevice":
     ensure => enabled,
     vlanid => "1",
     ip => "192.168.1.22",
-    subnet => "255.255.255.0",
+    netmask => "255.255.255.0",
     gateway => "192.168.1.1",
-    bootdevice => "pxe",
-    user1 => "admin",
-    user1pass => "password",
-    user1pass => "password",
     snmp => "public",
 
 
@@ -34,7 +30,6 @@ bmcuser{"bmcuser"
    ensure => enabled,
    username => "username",
    userpass => "userpass",
-   usercert =>"certkey",
    force => true
 
 }

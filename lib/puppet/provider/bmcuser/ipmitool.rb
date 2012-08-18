@@ -1,4 +1,4 @@
-Puppet::Type.type(:bmc).provider(:freeipmi) do
+Puppet::Type.type(:bmc).provider(:ipmitool) do
     desc "Provides Freeipmi support for the bmc type"
 
     commands :ipmitool

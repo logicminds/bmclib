@@ -4,17 +4,7 @@ Puppet::Type.newtype(:bmc) do
 
   ensurable
 
-    newparam(:user1) do
-        desc "The username to be added"
-        
-    end
-    
-    newparam(:user1pass) do
-        desc "The password of the user1 to create"
-        
-    end
-    
-    
+
     newparam(:provider) do
         desc "The type of ipmi provider to use when setting up the bmc"
         if $is_virtual
@@ -58,13 +48,8 @@ Puppet::Type.newtype(:bmc) do
     newparam(:ipsource) do
         desc "The type of ip address to use static or dhcp"
         newvalues(:static, :dhcp)
-        if resources[:ipsource].nil? and resources[:ip] and resources[:gateway] and resources[:subnet]
-          defaultto{:static}
-        else
-          defaultto{:dhcp}
-        end
+        defaultto{:dhcp}
 
-        
     end
 
         newparam(:snmp) do
@@ -91,17 +76,11 @@ Puppet::Type.newtype(:bmc) do
      
     end
     
-    newparam(:bootdevice) do
-        # freeipmi actually support more boot devices but these are the basic devices
-        desc "The boot device that should be set for next reboot"
-        newvalues(:pxe, :floppy, :disk, :bios, :cdrom)
-    end
-    
-    newparam(:subnet) do
-        desc "The subnet address of the bmc device"
+    newparam(:netmask) do
+        desc "The netmask address of the bmc device"
         validate do |value|
             unless validaddr?(value)
-                raise ArgumentError , "%s is not a valid subnet" % value
+                raise ArgumentError , "%s is not a valid netmask" % value
             end
         end
     end
