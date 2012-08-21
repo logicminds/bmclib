@@ -21,6 +21,9 @@ Puppet::Type.type(:bmc).provider(:ipmitool) do
   end
 
   def destroy
+    ipsrc = "dhcp"
+
+
 
   end
 

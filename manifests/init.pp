@@ -14,7 +14,7 @@
 class bmclib {
 	
 bmc{"ipmidevice":
-    provider => "freeipmi",
+    provider => "ipmitool",
     ensure => enabled,
     vlanid => "1",
     ip => "192.168.1.22",
@@ -24,6 +24,7 @@ bmc{"ipmidevice":
 
 
    }
+
 bmcuser{"bmcuser"
    provider => "freeipmi",
    privlevel => "ADMIN|OPERATOR|USER|CALLBACK"
@@ -31,6 +32,12 @@ bmcuser{"bmcuser"
    username => "username",
    userpass => "userpass",
    force => true
+
+}
+
+service{"ipmi":
+    ensure => running,
+    require => Pakcage["ipmi"]
 
 }
 
