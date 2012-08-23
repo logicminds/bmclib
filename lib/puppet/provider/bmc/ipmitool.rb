@@ -1,8 +1,8 @@
 Puppet::Type.type(:bmc).provider(:ipmitool) do
   desc "Provides Freeipmi support for the bmc type"
 
-  commands :ipmitool
-
+  command :ipmitool
+  #confine :is_virtual => "false"
 
   def create
     if resource[:ipsource] == "static"
@@ -17,18 +17,29 @@ Puppet::Type.type(:bmc).provider(:ipmitool) do
     if resource[:vlanid]
       vlanid = resource[:vlanid]
     end
+    enable_channel
 
+  end
+
+  def enable_channel
+     ipmitool 'lan set 1 access on'
+  end
+
+  def disable_channel
+    ipmitool 'lan set 1 access off'
   end
 
   def destroy
     ipsrc = "dhcp"
-
-
-
+    disable_channel
   end
 
   def exists?
-     value = ip.eql?(resource[:ip]) &
+     if resource[:force]
+       return false
+     end
+     # since snmp and vlan information won't be available everytime, we can't reapply the config everytime
+     value = ip.eql?(resource[:ip]) & netmask.eql?(resource[:netmask]) & gateway.eql?(resource[:gateway])
   end
 
   def lanconfig
@@ -47,14 +58,6 @@ Puppet::Type.type(:bmc).provider(:ipmitool) do
       laninfo[key] = value
     end
     return laninfo
-  end
-
-  def bootdev
-
-  end
-
-  def bootdev=(device)
-    ipmitool 'chassis'
   end
 
   def ip
@@ -112,8 +115,5 @@ Puppet::Type.type(:bmc).provider(:ipmitool) do
   def vlanid=(vid)
      ipmitool 'lan set 1 vlan id', vid
   end
-
-
-
 
 end

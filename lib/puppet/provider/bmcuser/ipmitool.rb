@@ -1,7 +1,9 @@
 Puppet::Type.type(:bmc).provider(:ipmitool) do
     desc "Provides Freeipmi support for the bmc type"
 
-    commands :ipmitool
+    #confine :is_virtual => "false"
+    command :ipmitool
+
     @users = {}
     @channel = 1
     @priv = {
@@ -49,7 +51,7 @@ Puppet::Type.type(:bmc).provider(:ipmitool) do
     def exists?
        if userexists?(resource[:username])
          value = userlist[:username][:enabled]
-         value = value & privequal?(resource[:username) & ! resource[:force]
+         value = value & privequal?(resource[:username]) & ! resource[:force]
        else
           return false
        end
