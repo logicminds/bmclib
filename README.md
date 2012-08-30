@@ -24,7 +24,8 @@ bmc_subnet => 255.255.255.0
 
 ### Example Puppet Manifest Usage:
 
-`
+```
+
  bmc{"ipmidevice":
         provider => "ipmitool",
         ensure => enabled,
@@ -47,25 +48,25 @@ bmc_subnet => 255.255.255.0
        require => Class["bmclib"]
     }
 
-`
+```
 
 #### Parameters for bmc type
 
-provider: if left blank will default to ipmitool
-ensure : enabled, present, disabled
-vlanid :the vlan the bmc interface should communicate on (optional)
-ip: the ip address of the bmc device (required)
-netmask:the netmask of the bmc device (required)
-gateway: the gateway of the bmc device (required)
-snmp:the snmp public community string for the bmc device
-force: force set the parameters during each puppet run
+- provider: if left blank will default to ipmitool
+- ensure : enabled, present, disabled
+- vlanid :the vlan the bmc interface should communicate on (optional)
+- ip: the ip address of the bmc device (required)
+- netmask:the netmask of the bmc device (required)
+- gateway: the gateway of the bmc device (required)
+- snmp:the snmp public community string for the bmc device
+- force: force set the parameters during each puppet run
 
 #### Parameters for bmcuser type
 
-provider: if left blank will default to ipmitool
-ensure : enabled, present, disabled
-privlevel :the privilage level of the bmc user
-username: username of bmc user to add
-userpass: the password of the bmc user to add
-force: force set the parameters during each puppet run
+- provider: if left blank will default to ipmitool
+- ensure : enabled, present, disabled
+- privlevel :the privilage level of the bmc user
+- username: username of bmc user to add
+- userpass: the password of the bmc user to add
+- force: force set the parameters during each puppet run
 
