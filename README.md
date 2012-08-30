@@ -9,10 +9,10 @@ freeipmi, hponcfg, and other oem related tools.
 
 ### Facts provided:
 
-bmc_gateway => 192.168.1.1
-bmc_ip => 192.168.1.41
-bmc_mac => 00:17:a4:49:ab:70
-bmc_subnet => 255.255.255.0
+- bmc_gateway => 192.168.1.1
+- bmc_ip => 192.168.1.41
+- bmc_mac => 00:17:a4:49:ab:70
+- bmc_subnet => 255.255.255.0
 
 ### Types Provided
 
