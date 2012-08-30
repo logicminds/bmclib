@@ -11,6 +11,7 @@ Puppet::Type.type(:bmc).provider(:ipmitool) do
         :user => 2,
         :callback => 1,
         :operator => 3,
+        :noaccess => 15,
     }
     def create
 
@@ -39,7 +40,7 @@ Puppet::Type.type(:bmc).provider(:ipmitool) do
 
     def destroy
       ipmitool "user set name", id, user
-      ipmitool "user priv", id, @priv[:callback], @channel
+      ipmitool "user priv", id, @priv[:noaccess], @channel
       ipmitool "user disable", id
     end
 
