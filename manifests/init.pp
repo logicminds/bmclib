@@ -15,7 +15,7 @@ class bmclib {
 
 service{"ipmi":
     ensure => running,
-    require => [Package["ipmitool"], Package["ipmidriver"]
+    require => [Package["ipmitool"], Package["ipmidriver"]]
 
 }
 
