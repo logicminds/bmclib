@@ -1,6 +1,8 @@
 # == Class: bmclib::ipmievd
 #
-# This class manages the ipmievd service.
+# This class manages the ipmievd service to send events from the IPMI System
+# Event Log (SEL) to syslog.
+# Test events can be generated via "ipmitool event".
 #
 # === Actions:
 #
