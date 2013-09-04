@@ -1,44 +1,49 @@
-# Class: bmclib
+# == Class: bmclib
 #
-# This module manages bmclib
+# This class manages the IPMI service which allows the system to communicate
+# with the BMC.
 #
-# Parameters:
+# === Actions:
 #
-# Actions:
+# Installs the OpenIPMI CLI tools and daemon.
+# Starts the ipmi daemon.
 #
-# Requires:
+# === Requires:
 #
-# Sample Usage:
+# Nothing
 #
-# [Remember: No empty lines between comments and class definition]
+# === Authors:
+#
+# Corey Osman <corey@logicminds.biz>
+#
+# === Copyright:
+#
+# Copyright (C) 2012 Corey Osman, unless otherwise noted.
+#
 class bmclib {
-
-service{"ipmi":
-    ensure => running,
-    require => [Package["ipmitool"], Package["ipmidriver"]]
-
-}
-
-case $::operatingsystem {
-   "ubuntu": {
-        $freeipmi = "freeipmi-tools"
-        $openipmi = "openipmi"
+  case $::operatingsystem {
+    'ubuntu': {
+      $freeipmi = 'freeipmi-tools'
+      $openipmi = 'openipmi'
     }
     default: {
-        $freeipmi = "freeipmi"
-        $openipmi = "OpenIPMI"
-	  }
-}
-
-
-package{"ipmitool":
-        ensure => latest,
-        name => "ipmitool",
-      }
-
-  package{"ipmidriver":
-        ensure => latest,
-        name => $openipmi,
+      $freeipmi = 'freeipmi'
+      $openipmi = 'OpenIPMI'
+    }
   }
 
+  package { 'ipmitool':
+    ensure => latest,
+    name   => 'ipmitool',
+  }
+
+  package { 'ipmidriver':
+    ensure => latest,
+    name   => $openipmi,
+  }
+
+  service { 'ipmi':
+    ensure  => running,
+    require => [ Package['ipmitool'], Package['ipmidriver'] ],
+  }
 }
