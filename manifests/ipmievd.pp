@@ -23,18 +23,22 @@
 class bmclib::ipmievd {
   require 'bmclib'
 
-  if $::osfamily == 'Debian' {
-    file { '/etc/default/ipmievd':
-      ensure  => 'present',
-      content => 'ENABLED=true',
-      notify  => Service['ipmievd'],
+  case $::osfamily {
+    'Debian': {
+      file { '/etc/default/ipmievd':
+        ensure  => 'present',
+        content => 'ENABLED=true',
+        notify  => Service['ipmievd'],
+      }
     }
-  } elsif $::osfamily == 'RedHat' {
-    file { '/etc/sysconfig/ipmievd':
-      ensure  => 'present',
-#      content => 'IPMIEVD_OPTIONS="sel pidfile=/var/run/ipmievd.pid"',
-      notify  => Service['ipmievd'],
+    'RedHat': {
+      file { '/etc/sysconfig/ipmievd':
+        ensure  => 'present',
+#        content => 'IPMIEVD_OPTIONS="sel pidfile=/var/run/ipmievd.pid"',
+        notify  => Service['ipmievd'],
+      }
     }
+    default: { }
   }
 
   service { 'ipmievd':
