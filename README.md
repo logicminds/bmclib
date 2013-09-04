@@ -2,7 +2,8 @@
 
 ### About
 
-The BMClib is a puppet library that provides bmc related facts as well as a bmc type and bmcuser type.
+The BMClib is a puppet library that provides BMC related facts as well as a bmc and bmcuser type.
+If also installs and starts the OpenIPMI service.
 Currently the only provider available is ipmitool.  However, in the future additional provider types will include
 freeipmi, hponcfg, and other oem related tools.
 
@@ -23,6 +24,10 @@ freeipmi, hponcfg, and other oem related tools.
 - ipmitool
 
 ### Example Puppet Manifest Usage:
+
+```puppet
+include 'bmclib'
+```
 
 ```puppet
 bmc { 'ipmidevice':
