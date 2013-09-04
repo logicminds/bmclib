@@ -26,6 +26,20 @@ class bmclib {
   case $::osfamily {
     'Debian': {
       $openipmi = 'openipmi'
+
+      file { '/etc/default/ipmi':
+        ensure  => 'present',
+        content => 'ENABLED=true',
+        notify  => Service['ipmi'],
+      }
+    }
+    'RedHat': {
+      $openipmi = 'OpenIPMI'
+
+      file { '/etc/sysconfig/ipmi':
+        ensure => 'present',
+        notify => Service['ipmi'],
+      }
     }
     default: {
       $openipmi = 'OpenIPMI'
@@ -46,6 +60,6 @@ class bmclib {
     enable     => true,
     hasrestart => true,
     hasstatus  => true,
-    require    => [ Package['ipmitool'], Package['ipmidriver'] ],
+    require    => [ Package['ipmitool'], Package['ipmidriver'], ],
   }
 }
