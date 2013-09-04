@@ -11,7 +11,7 @@ freeipmi, hponcfg, and other oem related tools.
 
 - bmc_gateway => 192.168.1.1
 - bmc_ip => 192.168.1.41
-- bmc_mac => 00:17:a4:49:ab:70
+- bmc_mac => 00:17:A4:49:AB:70
 - bmc_subnet => 255.255.255.0
 
 ### Types Provided
@@ -24,30 +24,28 @@ freeipmi, hponcfg, and other oem related tools.
 
 ### Example Puppet Manifest Usage:
 
+```puppet
+bmc { 'ipmidevice':
+  ensure   => enabled,
+  vlanid   => '1',
+  ip       => '192.168.1.22',
+  netmask  => '255.255.255.0',
+  gateway  => '192.168.1.1',
+  snmp     => 'public',
+  force    => true,
+  require  => Class['bmclib'],
+}
 ```
 
- bmc{"ipmidevice":
-        provider => "ipmitool",
-        ensure => enabled,
-        vlanid => "1",
-        ip => "192.168.1.22",
-        netmask => "255.255.255.0",
-        gateway => "192.168.1.1",
-        snmp => "public",
-        force => true,
-        require => Class["bmclib"]
-       }
-
-    bmcuser{"bmcuser"
-       provider => "ipmitool",
-       privlevel => "admin"
-       ensure => enabled,
-       username => "username",
-       userpass => "userpass",
-       force => true,
-       require => Class["bmclib"]
-    }
-
+```puppet
+bmcuser { 'bmcuser'
+  ensure    => enabled,
+  privlevel => 'admin'
+  username  => 'username',
+  userpass  => 'userpass',
+  force     => true,
+  require   => Class['bmclib'],
+}
 ```
 
 #### Parameters for bmc type
