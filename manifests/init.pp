@@ -15,35 +15,37 @@
 # === Authors:
 #
 # Corey Osman <corey@logicminds.biz>
+# Mike Arnold <mike@razorsedge.org>
 #
 # === Copyright:
 #
 # Copyright (C) 2012 Corey Osman, unless otherwise noted.
+# Copyright (C) 2013 Mike Arnold, unless otherwise noted.
 #
 class bmclib {
-  case $::operatingsystem {
-    'ubuntu': {
-      $freeipmi = 'freeipmi-tools'
+  case $::osfamily {
+    'Debian': {
       $openipmi = 'openipmi'
     }
     default: {
-      $freeipmi = 'freeipmi'
       $openipmi = 'OpenIPMI'
     }
   }
 
   package { 'ipmitool':
-    ensure => latest,
-    name   => 'ipmitool',
+    ensure => present,
   }
 
   package { 'ipmidriver':
-    ensure => latest,
+    ensure => present,
     name   => $openipmi,
   }
 
   service { 'ipmi':
-    ensure  => running,
-    require => [ Package['ipmitool'], Package['ipmidriver'] ],
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    hasstatus  => true,
+    require    => [ Package['ipmitool'], Package['ipmidriver'] ],
   }
 }
