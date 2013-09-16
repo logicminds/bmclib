@@ -9,12 +9,6 @@ Currently the only provider available is ipmitool.  However, in the future addit
 freeipmi, hponcfg, and other oem related tools.
 
 ### Testing ###
-At the moment I am unable to run tests due to lack of knowledge.  If you know how to test a custom type and provider together
-Please let me know.
-
-This module does use puppetlabs_spec_helper though.
-
-Documented here: https://puppetlabs.com/blog/the-next-generation-of-puppet-module-testing
 
 To begin you are supposed to run:
 
