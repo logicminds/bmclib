@@ -4,7 +4,12 @@ Puppet::Type.newtype(:bmcuser) do
 
   ensurable
 
-  newproperty(:username, :namevar=>true) do
+  newparam(:name, :namevar=>true) do
+    desc "The name of the resource"
+
+  end
+
+  newproperty(:username) do
     desc "The username to be added"
 
   end

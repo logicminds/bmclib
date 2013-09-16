@@ -162,7 +162,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   end
 
   def lanconfig
-    @lanconfig ||= self.laninfo
+    @lanconfig ||= self.class.laninfo
   end
 
 

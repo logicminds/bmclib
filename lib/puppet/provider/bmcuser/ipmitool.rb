@@ -18,7 +18,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
     }
     def create
 
-      user = resources[:username]
+      user = resource[:username]
       id = userid(user)
       if not userexists?(user)
         ipmitoolcmd "user set name", id, user
