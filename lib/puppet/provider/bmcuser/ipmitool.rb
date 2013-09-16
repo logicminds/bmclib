@@ -1,8 +1,7 @@
-Puppet::Type.type(:bmc).provide(:ipmitool) do
-    desc "Provides Freeipmi support for the bmc type"
+Puppet::Type.type(:bmcuser).provide(:ipmitool) do
+    desc "Provides ipmitool support for the bmc type"
 
-    #confine :is_virtual => "false"
-    command :ipmitool
+    commands 'ipmitoolcmd'
     confine :is_virtual => "false"
     # if the open ipmi driver does not exist we can perform any of these configurations
     #      # check to see that openipmi driver is loaded and ipmi device exists
@@ -22,20 +21,20 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
       user = resources[:username]
       id = userid(user)
       if not userexists?(user)
-        ipmitool "user set name", id, user
-        ipmitool "user set password", id, resource[:password]
-        ipmitool "user priv", id, @priv[resource[:privlevel]], @channel
-        ipmitool "user enable", id
+        ipmitoolcmd "user set name", id, user
+        ipmitoolcmd "user set password", id, resource[:password]
+        ipmitoolcmd "user priv", id, @priv[resource[:privlevel]], @channel
+        ipmitoolcmd "user enable", id
 
       else
         if not isenabled?(user)
-          ipmitool "user enable", id
+          ipmitoolcmd "user enable", id
         end
         if not privequal?(user)
-          ipmitool "user priv", id, @priv[resource[:privlevel]], @channel
+          ipmitoolcmd "user priv", id, @priv[resource[:privlevel]], @channel
         end
         if resource[:force]
-          ipmitool "user set password", id, resource[:password]
+          ipmitoolcmd "user set password", id, resource[:password]
         end
 
       end
@@ -43,9 +42,9 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
     end
 
     def destroy
-      ipmitool "user set name", id, user
-      ipmitool "user priv", id, @priv[:noaccess], @channel
-      ipmitool "user disable", id
+      ipmitoolcmd "user set name", id, user
+      ipmitoolcmd "user priv", id, @priv[:noaccess], @channel
+      ipmitoolcmd "user disable", id
     end
 
     def privequal?(user)
@@ -91,7 +90,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
 
     def userlist
       if @users.length < 1
-        userdata = ipmitool "user list 1"
+        userdata = ipmitoolcmd "user list 1"
         @users = parse(userdata)
       end
       return @users
@@ -126,7 +125,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
     end
 
     def self.instances
-      userdata = ipmitool "user list 1"
+      userdata = ipmitoolcmd "user list 1"
       userdata.lines.each do | line|
         user = {}
         # skip the header

@@ -1,7 +1,8 @@
 Puppet::Type.type(:bmc).provide(:ipmitool) do
-  desc "Provides Freeipmi support for the bmc type"
+  desc "Provides ipmitool support for the bmc type"
 
-  command :ipmitool
+  commands 'ipmitoolcmd'
+
   confine :is_virtual => "false"
   # if the open ipmi driver does not exist we can perform any of these configurations
   #      # check to see that openipmi driver is loaded and ipmi device exists
@@ -73,7 +74,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   end
 
   def ipsource=(source)
-    ipmitool 'lan set 1 ipsrc', source
+    ipmitoolcmd 'lan set 1 ipsrc', source
   end
 
   def ip
@@ -81,7 +82,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   end
 
   def ip=(address)
-    ipmitool 'lan set 1 ipaddr', address
+    ipmitoolcmd 'lan set 1 ipaddr', address
   end
 
 
@@ -90,7 +91,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   end
 
   def netmask=(subnet)
-    ipmitool 'lan set 1 netmask', subnet
+    ipmitoolcmd 'lan set 1 netmask', subnet
   end
 
   def gateway
@@ -98,7 +99,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   end
 
   def gateway=(address)
-    ipmitool 'lan set 1 defgw ipaddr', address
+    ipmitoolcmd 'lan set 1 defgw ipaddr', address
   end
 
   def vlanid
@@ -106,7 +107,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   end
 
   def vlanid=(vid)
-    ipmitool 'lan set 1 vlan id', vid
+    ipmitoolcmd 'lan set 1 vlan id', vid
   end
 
   #def snmp
@@ -114,24 +115,23 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   #end
   #
   #def snmp=(community)
-  #  ipmitool 'lan set 1 snmp', community
+  #  ipmitoolcmd 'lan set 1 snmp', community
   #end
 
   # end - bmc parameters
 
 
   def self.laninfo
-    landata = ipmitool 'lan print 1'
-    laninfo = {}
-
+    landata = ipmitoolcmd 'lan print 1'
+    info = {}
     landata.lines.each do |line|
       # clean up the data from spaces
       item = line.split(':', 2)
       key = item.first.strip.downcase
       value = item.last.strip
-      laninfo[key] = value
+      info[key] = value
     end
-    return laninfo
+    return info
   end
 
   private
@@ -154,11 +154,11 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   end
 
   def enable_channel
-    ipmitool 'lan set 1 access on'
+    ipmitoolcmd 'lan set 1 access on'
   end
 
   def disable_channel
-    ipmitool 'lan set 1 access off'
+    ipmitoolcmd 'lan set 1 access off'
   end
 
   def lanconfig

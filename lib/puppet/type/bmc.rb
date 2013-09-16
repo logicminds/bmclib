@@ -21,7 +21,12 @@ Puppet::Type.newtype(:bmc) do
       defaultto(:ipmitool)
   end
 
+  # This is just a simple verification to valid ip related sources
+  def validaddr?(source)
+    valid = /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/.match("#{source}")
+    ! valid.nil?
 
+  end
   #
   #  defaultto do
   #
@@ -62,24 +67,21 @@ Puppet::Type.newtype(:bmc) do
   newproperty(:ip) do
     desc "The ip address of the bmc device"
     validate do |value|
-      unless validaddr?(value)
+      valid = /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/.match("#{value}")
+      if valid.nil?
         raise ArgumentError , "%s is not a valid ip" % value
       end
     end
   end
 
 
-  # This is just a simple verification to valid ip related sources
-  def validaddr?(source)
-    valid = /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/.match("#{source}")
-    ! valid.nil?
 
-  end
 
   newproperty(:netmask) do
     desc "The netmask address of the bmc device"
     validate do |value|
-      unless validaddr?(value)
+      valid = /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/.match("#{value}")
+      if valid.nil?
         raise ArgumentError , "%s is not a valid netmask" % value
       end
     end
@@ -88,7 +90,8 @@ Puppet::Type.newtype(:bmc) do
   newproperty(:gateway) do
     desc "The gateway address of the bmc device"
     validate do |value|
-      unless validaddr?(value)
+      valid = /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/.match("#{value}")
+      if valid.nil?
         raise ArgumentError , "%s is not a valid gateway" % value
       end
     end
