@@ -3,6 +3,10 @@ Puppet::Type.type(:bmc).provider(:ipmitool) do
 
     #confine :is_virtual => "false"
     command :ipmitool
+    confine :is_virtual => "false"
+    # if the open ipmi driver does not exist we can perform any of these configurations
+    #      # check to see that openipmi driver is loaded and ipmi device exists
+    confine :true => File.exists?('/dev/ipmi0') || File.exists?('/dev/ipmi/0') || File.exists?('/dev/ipmidev/0')
 
     @users = {}
     @channel = 1
@@ -119,6 +123,36 @@ Puppet::Type.type(:bmc).provider(:ipmitool) do
       end
       return userlist
 
+    end
+
+    def self.instances
+      userdata = ipmitool "user list 1"
+      userdata.lines.each do | line|
+        user = {}
+        # skip the header
+        next if line.match(/^ID/)
+        data = line.split(/\t/)
+        user[:id] = data.first.strip
+        user[:name] = data[1].strip
+        user[:callin] = data[2].strip == "true"
+        user[:linkauth] = data[3].strip == "true"
+        user[:enabled] = data[4].strip == "true"
+        user[:priv] = data[5].strip
+
+        # create the resource
+        new(:name => user[:name], :ensure => :present,
+            :privlevel => user[:priv], :userpass => '*************' )
+      end
+
+    end
+
+    def self.prefetch(resources)
+      users = instances
+      resources.keys.each do | name|
+        if provider = users.find{|user| user.name == name }
+          resources[name].provider = provider
+        end
+      end
     end
 
 end
