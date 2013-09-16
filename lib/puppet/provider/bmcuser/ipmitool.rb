@@ -1,4 +1,4 @@
-Puppet::Type.type(:bmc).provider(:ipmitool) do
+Puppet::Type.type(:bmc).provide(:ipmitool) do
     desc "Provides Freeipmi support for the bmc type"
 
     #confine :is_virtual => "false"

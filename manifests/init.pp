@@ -13,32 +13,32 @@
 # [Remember: No empty lines between comments and class definition]
 class bmclib {
 
-#service{"ipmi":
-#    ensure => running,
-#    require => [Package["ipmitool"], Package["ipmidriver"]]
-#
-#}
-#
-#case $::operatingsystem {
-#   "ubuntu": {
-#        $freeipmi = "freeipmi-tools"
-#        $openipmi = "openipmi"
-#    }
-#    default: {
-#        $freeipmi = "freeipmi"
-#        $openipmi = "OpenIPMI"
-#	  }
-#}
-#
-#
-#package{"ipmitool":
-#        ensure => latest,
-#        name => "ipmitool",
-#      }
-#
-#  package{"ipmidriver":
-#        ensure => latest,
-#        name => $openipmi,
-#  }
+service{"ipmi":
+    ensure => running,
+    require => [Package["ipmitool"], Package["ipmidriver"]]
+
+}
+
+case $::operatingsystem {
+   "ubuntu": {
+        $freeipmi = "freeipmi-tools"
+        $openipmi = "openipmi"
+    }
+    default: {
+        $freeipmi = "freeipmi"
+        $openipmi = "OpenIPMI"
+	  }
+}
+
+
+package{"ipmitool":
+        ensure => latest,
+        name => "ipmitool",
+      }
+
+  package{"ipmidriver":
+        ensure => latest,
+        name => $openipmi,
+  }
 
 }
