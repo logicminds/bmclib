@@ -16,10 +16,10 @@ Documented here: https://puppetlabs.com/blog/the-next-generation-of-puppet-modul
 
 To begin you are supposed to run:
 
-'''
-rake spec_prep  (just do this once)
-rake spec
-'''
+
+- rake spec_prep  (just do this once)
+- rake spec
+
 ### Facts provided:
 
 - bmc_gateway => 192.168.1.1
