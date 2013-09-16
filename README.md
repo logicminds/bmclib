@@ -1,5 +1,7 @@
 ## BMCLib
 
+[![Build Status](https://travis-ci.org/logicminds/bmclib.png)](https://travis-ci.org/logicminds/bmclib)
+
 ### About
 
 The BMClib is a puppet library that provides bmc related facts as well as a bmc type and bmcuser type.
