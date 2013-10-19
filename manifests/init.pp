@@ -12,8 +12,8 @@
 #
 # [Remember: No empty lines between comments and class definition]
 class bmclib (
-  service_ensure = 'running',
-  package_ensure = 'latest',
+  $service_ensure = 'running',
+  $package_ensure = 'latest',
 ) {
 
   service { 'ipmi':
