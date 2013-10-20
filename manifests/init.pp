@@ -25,25 +25,13 @@
 # [Remember: No empty lines between comments and class definition]
 class bmclib (
   $service_ensure = 'running',
-  $package_ensure = 'latest',
+  $package_ensure = 'latest'
 ) {
-
-
 
   case $::osfamily {
     'Debian': {
       $freeipmi = 'freeipmi-tools'
       $openipmi = 'openipmi'
-    }
-    default: {
-      $freeipmi = 'freeipmi'
-      $openipmi = 'OpenIPMI'
-
-      file { '/etc/default/ipmi':
-        ensure  => 'present',
-        content => 'ENABLED=true',
-        notify  => Service['ipmi'],
-      }
     }
     'RedHat': {
       $openipmi = 'OpenIPMI'
@@ -54,6 +42,7 @@ class bmclib (
       }
     }
     default: {
+      $freeipmi = 'freeipmi'
       $openipmi = 'OpenIPMI'
     }
   }
@@ -73,6 +62,6 @@ class bmclib (
     enable     => true,
     hasrestart => true,
     hasstatus  => true,
-    require    => [ Package['ipmitool'], Package['ipmidriver'], ],
+    require    => [ Package['ipmitool'], Package['ipmidriver']],
   }
 }

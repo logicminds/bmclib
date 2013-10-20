@@ -5,7 +5,9 @@ require 'spec_helper'
 describe 'bmclib', :type => 'class' do
 
   context 'on a RedHat osfamily' do
-    let(:params) {{}}
+    let(:params) do
+      {:package_ensure => 'present' }
+    end
     let :facts do {
       :osfamily        => 'RedHat',
       :operatingsystem => 'RedHat'
@@ -39,7 +41,9 @@ describe 'bmclib', :type => 'class' do
   end
 
   context 'on a Debian osfamily' do
-    let(:params) {{}}
+    let(:params) do
+      {:package_ensure => 'present' }
+    end
     let :facts do {
       :osfamily        => 'Debian',
       :operatingsystem => 'Debian'
