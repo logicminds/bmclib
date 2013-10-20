@@ -11,34 +11,36 @@
 # Sample Usage:
 #
 # [Remember: No empty lines between comments and class definition]
-class bmclib {
+class bmclib (
+  $service_ensure = 'running',
+  $package_ensure = 'latest',
+) {
 
-service{"ipmi":
-    ensure => running,
-    require => [Package["ipmitool"], Package["ipmidriver"]]
+  service { 'ipmi':
+    ensure  => $service_ensure,
+    require => [ Package["ipmitool"], 
+                 Package["ipmidriver"] ]
+  }
 
-}
-
-case $::operatingsystem {
-   "ubuntu": {
-        $freeipmi = "freeipmi-tools"
-        $openipmi = "openipmi"
+  case $::osfamily {
+    'Debian': {
+      $freeipmi = 'freeipmi-tools'
+      $openipmi = 'openipmi'
     }
     default: {
-        $freeipmi = "freeipmi"
-        $openipmi = "OpenIPMI"
-	  }
-}
+      $freeipmi = 'freeipmi'
+      $openipmi = 'OpenIPMI' 
+    }
+  }
 
+  package { 'ipmitool':
+    name   => 'ipmitool',
+    ensure => $package_ensure,
+  }
 
-package{"ipmitool":
-        ensure => latest,
-        name => "ipmitool",
-      }
-
-  package{"ipmidriver":
-        ensure => latest,
-        name => $openipmi,
+  package { 'ipmidriver':
+    name   => $openipmi,
+    ensure => $package_ensure,
   }
 
 }
