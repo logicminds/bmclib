@@ -1,28 +1,28 @@
 #bmc.rb
 
 Facter.add("bmc_ip") do
-  confine :is_virtual => "false"
+  confine :is_virtual => :false
   setcode do
     ip
   end
 end
 
 Facter.add("bmc_mac") do
-  confine :is_virtual => "false"
+  confine :is_virtual => :false
   setcode do
     mac
   end
 end
 
 Facter.add("bmc_subnet") do
-  confine :is_virtual => "false"
+  confine :is_virtual => :false
   setcode do
    subnet
   end
 end
 
 Facter.add("bmc_gateway") do
-  confine :is_virtual => "false"
+  confine :is_virtual => :false
   setcode do
    gateway
   end

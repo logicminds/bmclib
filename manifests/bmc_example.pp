@@ -8,7 +8,7 @@ class bmclib::bmc_example {
         ip => "192.168.1.22",
         netmask => "255.255.255.0",
         gateway => "192.168.1.1",
-       }
+   }
 
 
 }
