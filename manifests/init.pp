@@ -1,14 +1,26 @@
-# Class: bmclib
+# == Class: bmclib
 #
-# This module manages bmclib
+# This class manages the IPMI service which allows the system to communicate
+# with the BMC.
 #
-# Parameters:
+# === Actions:
 #
-# Actions:
+# Installs the OpenIPMI CLI tools and daemon.
+# Starts the ipmi daemon.
 #
-# Requires:
+# === Requires:
 #
-# Sample Usage:
+# Nothing
+#
+# === Authors:
+#
+# Corey Osman <corey@logicminds.biz>
+# Mike Arnold <mike@razorsedge.org>
+#
+# === Copyright:
+#
+# Copyright (C) 2012 Corey Osman, unless otherwise noted.
+# Copyright (C) 2013 Mike Arnold, unless otherwise noted.
 #
 # [Remember: No empty lines between comments and class definition]
 class bmclib (
@@ -16,11 +28,7 @@ class bmclib (
   $package_ensure = 'latest',
 ) {
 
-  service { 'ipmi':
-    ensure  => $service_ensure,
-    require => [ Package["ipmitool"], 
-                 Package["ipmidriver"] ]
-  }
+
 
   case $::osfamily {
     'Debian': {
@@ -29,7 +37,24 @@ class bmclib (
     }
     default: {
       $freeipmi = 'freeipmi'
-      $openipmi = 'OpenIPMI' 
+      $openipmi = 'OpenIPMI'
+
+      file { '/etc/default/ipmi':
+        ensure  => 'present',
+        content => 'ENABLED=true',
+        notify  => Service['ipmi'],
+      }
+    }
+    'RedHat': {
+      $openipmi = 'OpenIPMI'
+
+      file { '/etc/sysconfig/ipmi':
+        ensure => 'present',
+        notify => Service['ipmi'],
+      }
+    }
+    default: {
+      $openipmi = 'OpenIPMI'
     }
   }
 
@@ -43,4 +68,11 @@ class bmclib (
     ensure => $package_ensure,
   }
 
+  service { 'ipmi':
+    ensure     => $service_ensure,
+    enable     => true,
+    hasrestart => true,
+    hasstatus  => true,
+    require    => [ Package['ipmitool'], Package['ipmidriver'], ],
+  }
 }
