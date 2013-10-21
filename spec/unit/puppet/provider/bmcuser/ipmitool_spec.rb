@@ -25,8 +25,8 @@ describe provider_class do
 
   end
 
-  it "should be an instance of Puppet::Type::Bmcuser::ProviderIpmitool" do
-    provider.must be_an_instance_of Puppet::Type::Bmcuser::ProviderIpmitool
+  it "should be an instance of Puppet::Type::Bmcuser::Provider::Ipmitool" do
+    provider.should be_an_instance_of Puppet::Type::Bmcuser::ProviderIpmitool
     #
   end
 

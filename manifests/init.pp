@@ -32,6 +32,12 @@ class bmclib (
     'Debian': {
       $freeipmi = 'freeipmi-tools'
       $openipmi = 'openipmi'
+
+      file { '/etc/default/ipmi':
+        ensure => 'present',
+        notify => Service['ipmi'],
+        content => 'ENABLED=true',
+      }
     }
     'RedHat': {
       $openipmi = 'OpenIPMI'
