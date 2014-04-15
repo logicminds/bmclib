@@ -1,4 +1,4 @@
-name 'bmclib'
+name 'logicminds-bmclib'
 version '0.0.1'
 author 'Corey Osman'
 license 'GPLv3'
