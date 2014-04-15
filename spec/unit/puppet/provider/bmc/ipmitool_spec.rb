@@ -43,9 +43,9 @@ Cipher Suite Priv Max   : XXXXXXXXXXXXXXX
     File.stubs(:exists?).returns(true)
     Puppet::Util.stubs(:which).with("ipmitool").returns("/bin/ipmitool")
     subject.stubs(:which).with("ipmitool").returns("/bin/ipmitool")
-    subject.stubs(:ipmitoolcmd).with("lan print 1").returns(ipmitool_lan_print)
-    subject.stubs(:ipmitoolcmd).with('lan set 1 access on').returns(true)
-    subject.stubs(:ipmitoolcmd).with([ 'lan set 1 ipsrc', 'dhcp' ]).returns(true)
+    subject.stubs(:ipmitoolcmd).with([ "lan", "print", "1"]).returns(ipmitool_lan_print)
+    subject.stubs(:ipmitoolcmd).with([ "lan", "set", "1", "access", "on"]).returns(true)
+    subject.stubs(:ipmitoolcmd).with([ "lan", "set", "1", "ipsrc", "dhcp" ]).returns(true)
 
     @resource =  Puppet::Type::Bmc.new( 
       { :ip       => '192.168.1.34',
@@ -66,14 +66,14 @@ Cipher Suite Priv Max   : XXXXXXXXXXXXXXX
 
   describe 'install' do
     it 'enables the channel' do
-      subject.expects(:ipmitoolcmd).with('lan set 1 access on')
+      subject.expects(:ipmitoolcmd).with(["lan", "set", "1", "access", "on"])
       @provider.install
     end
   end
 
   describe 'ip' do
     it 'should set the ipsource' do
-      subject.expects(:ipmitoolcmd).with([ 'lan set 1 ipsrc', 'dhcp' ])
+      subject.expects(:ipmitoolcmd).with([ "lan", "set", "1", "ipsrc", "dhcp" ])
       @provider.ipsource='dhcp'
     end
   end 
