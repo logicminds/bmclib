@@ -6,7 +6,7 @@
   "project_page": "http://www.github.com/logicminds/bmclib",
   "source": "",
   "summary": "The bmclib is a module that automates deployment of ipmi devices and provides other useful types",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "checksums": {
     "Modulefile": "b4679dca16c715958dbed014ac3c29cb",
     "README": "9fa9834c854c341d7ac12c5bc01f831e",
