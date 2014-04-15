@@ -16,11 +16,16 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
       :noaccess => 15
   }
 
+  mk_resource_methods
+
   def create
     user = resource[:username]
-    id = newuserid
-    ipmitoolcmd([ "user", "set", "name", id, user] )
-    ipmitoolcmd([ "user", "set", "password", id, resource[:password] ])
+    id = find_user_id(resource[:username])
+
+    ipmitoolcmd([ "user", "set", "name", id, resource[:username]] )
+    if resource[:userpass]
+      ipmitoolcmd([ "user", "set", "password", id, resource[:userpass] ])
+    end
     ipmitoolcmd([ "user", "priv", id, self.class::PRIV[resource[:privlevel]], self.class::CHANNEL ])
     ipmitoolcmd([ "user", "enable", id ])
   end
@@ -39,34 +44,27 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
      @property_hash[:ensure] == :present
   end
 
-  def newuserid
-    userlist.each do | user |
-      if user[:name] =~ /\(Empty User\)/
-        return user[:id]
+  def find_user_id(username)
+    userlist.each do | user, hash |
+      if username == hash[:name]
+        return hash[:id]
+      elsif hash[:username] =~ /\(Empty User\)/
+        return hash[:id]
       end
     end
-    # If we get here all the users are currently occupied, lets check for disabled users
-    userlist.each do | user |
-      if ! user[:enabled]
-        return user[:id]
+    # If we got here, we must be adding a new user
+    available_ids = (2..10).to_a
+    userlist.each do | user, hash |
+      if hash[:name]
+        available_ids.delete(hash[:id])
       end
     end
-  end
-
-  def username()
-    @property_hash[:username]
-  end
-
-  def userpass()
-    @property_hash[:userpass]
+    return available_ids.first
   end
 
   def userlist()
-    @cached_userlist ||= self.userlist()
-  end
-
-  def privlevel()
-    @property_hash[:privlevel]
+    @cached_userlist ||= self.class.userlist()
+    return @cached_userlist
   end
 
   def self.userlist
@@ -80,7 +78,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
       # skip the header
       next if line.match(/^ID/)
       data = line.split()
-      user[:id] = data.first.strip
+      user[:id] = data.first.strip.to_i
       user[:name] = data[1].strip
       user[:callin] = data[2].strip == "true"
       user[:linkauth] = data[3].strip == "true"
@@ -97,6 +95,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
       # create the resource
       bmcuser_instances << new(
            :name => user,
+           :id => hash[:id],
            :username => user,
            :ensure => :present,
            :privlevel => hash[:priv],
@@ -111,8 +110,8 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
   def self.prefetch(resources)
     users = instances
     resources.keys.each do | name |
-      if provider = users.find{|user| user[:name] == name }
-        resources[:name][:provider] = provider
+      if provider = users.find{|user| user.name == name }
+        resources[name].provider = provider
       end
     end
   end

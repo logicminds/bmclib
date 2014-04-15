@@ -27,7 +27,7 @@ describe provider_class do
     File.stubs(:exists?).returns(true)
     Puppet::Util.stubs(:which).with("ipmitool").returns("/bin/ipmitool")
     subject.stubs(:which).with("ipmitool").returns("/bin/ipmitool")
-
+    Puppet::Util::Execution.stubs(:execute).with(ipmitool_user_list_cmd, execute_options).returns(ipmitool_user_list_output)
   end
 
   it "should be an instance of Puppet::Type::Bmcuser::Provider::Ipmitool" do
@@ -36,14 +36,13 @@ describe provider_class do
   end
 
   it "When enumerating instances" do
-    Puppet::Util::Execution.expects(:execute).with(ipmitool_user_list_cmd, execute_options).returns(ipmitool_user_list_output)
     expect(provider_class.userlist).to eq(
       {"ADMIN" =>
         {:priv => "administrator",
          :enabled=>true,
          :callin=>false,
          :name=>"ADMIN",
-         :id=>"2",
+         :id=>2,
          :linkauth=>false
         }
       }
