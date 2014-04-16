@@ -13,7 +13,7 @@ Configuring an IPMI BMC
   }
   bmcuser { 'bmcuser':
     ensure    => 'presetn',
-    privlevel => 'admin'
+    privlevel => 'administrator'
     username  => 'username',
     userpass  => 'userpass',
     force     => true,

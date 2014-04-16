@@ -54,7 +54,7 @@ bmc { 'ipmidevice':
 ```puppet
 bmcuser { 'bmcuser'
   ensure    => enabled,
-  privlevel => 'admin',
+  privlevel => 'administrator',
   username  => 'username',
   userpass  => 'userpass',
   force     => true,
