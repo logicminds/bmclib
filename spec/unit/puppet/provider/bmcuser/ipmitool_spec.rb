@@ -11,10 +11,10 @@ describe provider_class do
       :userpass => 'supersecret',
       :privlevel => 'admin',
       :username => "testuser",
-      :name => "testuser")}
-
-
+      :name => "testuser")
+  }
   let (:provider) { described_class.new(resource) }
+
   let(:facts)do {:is_virtual => 'false'} end
 
 
@@ -27,7 +27,34 @@ describe provider_class do
 
   it "should be an instance of Puppet::Type::Bmcuser::Provider::Ipmitool" do
     provider.should be_an_instance_of Puppet::Type::Bmcuser::ProviderIpmitool
-    #
+  end
+
+  [:admin, :user, :operator, :callback, :administrator, :noaccess].each do |priv|
+    context "privilege for type #{priv} should be supported" do
+
+      let (:resource) { Puppet::Type.type(:bmcuser).new(
+        :provider => 'ipmitool',
+        :userpass => 'supersecret',
+        :privlevel => priv,
+        :username => "testuser",
+        :name => "testuser")
+      }
+    end
+    let (:provider) { described_class.new(resource) }
+    it { provider.should be_an_instance_of Puppet::Type::Bmcuser::ProviderIpmitool }
+
+  end
+  context 'invalid privilege type' do
+    let (:resource) { Puppet::Type.type(:bmcuser).new(
+      :provider => 'ipmitool',
+      :userpass => 'supersecret',
+      :privlevel => 'blah',
+      :username => "testuser",
+      :name => "testuser")
+    }
+    let (:provider) { described_class.new(resource) }
+    it { expect{ provider.to raise_error(Puppet::ResourceError)  } }
+
   end
 
 end

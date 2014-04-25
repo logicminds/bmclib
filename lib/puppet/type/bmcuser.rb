@@ -25,8 +25,8 @@ Puppet::Type.newtype(:bmcuser) do
   end
 
   newproperty(:privlevel) do
-    desc "The public certificate of the user"
-    newvalues(:admin, :user, :operator, :callback, :administrator)
+    desc "The privilege level type for the user"
+    newvalues(:admin, :user, :operator, :callback, :administrator, :noaccess)
   end
 
   newparam(:provider) do
