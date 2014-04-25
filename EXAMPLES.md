@@ -12,7 +12,7 @@ Configuring an IPMI BMC
     gateway  => '192.168.1.1',
   }
   bmcuser { 'bmcuser':
-    ensure    => 'presetn',
+    ensure    => 'present',
     privlevel => 'admin'
     username  => 'username',
     userpass  => 'userpass',

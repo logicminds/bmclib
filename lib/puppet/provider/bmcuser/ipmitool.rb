@@ -10,6 +10,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
     @users = {}
     @channel = 1
     @priv = {
+        :administrator => 4,
         :admin => 4,
         :user => 2,
         :callback => 1,
