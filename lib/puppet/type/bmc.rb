@@ -74,9 +74,6 @@ Puppet::Type.newtype(:bmc) do
     end
   end
 
-
-
-
   newproperty(:netmask) do
     desc "The netmask address of the bmc device"
     validate do |value|
@@ -97,7 +94,6 @@ Puppet::Type.newtype(:bmc) do
     end
   end
 
-
   newproperty(:vlanid) do
     defaultto {"off"}
     validate do |value|
@@ -106,12 +102,6 @@ Puppet::Type.newtype(:bmc) do
       end
     end
   end
-
-    
-    
-    
-    
-    
 
 end
 
