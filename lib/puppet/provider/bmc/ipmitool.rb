@@ -15,9 +15,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
       netmask = resource[:netmask]
       gateway = resource[:gateway]
     end
-    #if resource[:snmp]
-    #  snmp = resource[:snmp]
-    #end
+
     ipsrc = resource[:ipsource]
     if resource[:vlanid]
       vlanid = resource[:vlanid]
@@ -44,27 +42,27 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
 
   # return all instances of this resource which really should only be one instance
   def self.instances
-     info       = self.laninfo
-     name       = info["mac address"]
-     ipsource   = info["ip address source"].downcase!
-     ip         = info["ip address"]
-     netmask    = info["subnet mask"]
-     gateway    = info["default gateway ip"]
-     vlanid     = info["802.1q vlan id"]
+    info       = self.laninfo
+    name       = info["mac address"]
+    ipsource   = info["ip address source"].downcase!
+    ip         = info["ip address"]
+    netmask    = info["subnet mask"]
+    gateway    = info["default gateway ip"]
+    vlanid     = info["802.1q vlan id"]
 
-     new(:name => name, :ensure => :present,
-         :ipsource => ipsource, :ip => ip,
-         :netmask => netmask, :gateway => gateway,
-         :vlanid => vlanid )
+    new(:name => name, :ensure => :present,
+        :ipsource => ipsource, :ip => ip,
+        :netmask => netmask, :gateway => gateway,
+        :vlanid => vlanid )
   end
 
   def self.prefetch(resources)
-     devices = instances
-     resources.keys.each do | name|
-       if provider = devices.find{|device| device.name == name }
-         resources[name].provider = provider
-       end
-     end
+    devices = instances
+    resources.keys.each do | name|
+      if provider = devices.find{|device| device.name == name }
+        resources[name].provider = provider
+      end
+    end
   end
 
   # bmc puppet parameters to get / set
