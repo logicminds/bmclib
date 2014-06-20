@@ -37,7 +37,9 @@ end
     if ipmitool.empty?
       return {}
     end
-    landata = `#{ipmitool} lan print 1 2>/dev/null`
+    channel_lookup = { 'Intel Corporation' => 3 }
+    channel = channel_lookup.fetch(Facter.value('boardmanufacturer'), 1)
+    landata = `#{ipmitool} lan print #{channel} 2>/dev/null`
     laninfo = {}
 
     landata.lines.each do |line|
