@@ -57,7 +57,7 @@ describe 'bmclib', :type => 'class' do
       :ensure => 'present',
       :name   => 'openipmi'
     )}
-    it { should contain_service('ipmi').with(
+    it { should contain_service('openipmi').with(
       :ensure     => 'running',
       :enable     => 'true',
       :hasrestart => 'true',
@@ -68,7 +68,7 @@ describe 'bmclib', :type => 'class' do
       :ensure  => 'present',
       :path    => '/etc/default/ipmi',
       :content => 'ENABLED=true',
-      :notify  => 'Service[ipmi]'
+      :notify  => 'Service[openipmi]'
     )}
     it 'should contain File[/etc/default/ipmi] with contents "ENABLED=true"' do
       verify_contents(subject, '/etc/default/ipmi', [

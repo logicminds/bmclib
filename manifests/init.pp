@@ -32,24 +32,27 @@ class bmclib (
     'Debian': {
       $freeipmi = 'freeipmi-tools'
       $openipmi = 'openipmi'
+      $service_name = 'openipmi'
 
       file { '/etc/default/ipmi':
         ensure => 'present',
-        notify => Service['ipmi'],
+        notify => Service[$service_name],
         content => 'ENABLED=true',
       }
     }
     'RedHat': {
       $openipmi = 'OpenIPMI'
+      $service_name = 'ipmi'
 
       file { '/etc/sysconfig/ipmi':
         ensure => 'present',
-        notify => Service['ipmi'],
+        notify => Service[$service_name],
       }
     }
     default: {
       $freeipmi = 'freeipmi'
       $openipmi = 'OpenIPMI'
+      $service_name = 'ipmi'
     }
   }
 
@@ -63,7 +66,7 @@ class bmclib (
     ensure => $package_ensure,
   }
 
-  service { 'ipmi':
+  service { $service_name:
     ensure     => $service_ensure,
     enable     => true,
     hasrestart => true,
