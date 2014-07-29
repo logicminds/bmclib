@@ -1,5 +1,12 @@
 #bmc.rb
 
+Facter.add("bmc_detected", :timeout => 2) do
+  confine :is_virtual => :false
+  setcode do
+    not lanconfig.empty?
+  end
+end
+
 Facter.add("bmc_ip", :timeout => 2) do
   confine :is_virtual => :false
   setcode do
