@@ -37,7 +37,10 @@ end
     if ipmitool.empty?
       return {}
     end
-    channel_lookup = { 'Intel Corporation' => 3 }
+    channel_lookup = { 
+	'Intel Corporation' => 3,
+	'HP' => 2,
+    }
     channel = channel_lookup.fetch(Facter.value('boardmanufacturer'), 1)
     landata = `#{ipmitool} lan print #{channel} 2>/dev/null`
     laninfo = {}
