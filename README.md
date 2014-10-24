@@ -13,8 +13,6 @@ freeipmi, hponcfg, and other oem related tools.
 
 To begin you are supposed to run:
 
-
-- rake spec_prep  (just do this once)
 - rake spec
 
 ### Facts provided:
@@ -23,8 +21,13 @@ To begin you are supposed to run:
 - bmc_ip => 192.168.1.41
 - bmc_mac => 00:17:A4:49:AB:70
 - bmc_subnet => 255.255.255.0
-- bmc_device_present => "false","true"
+- bmc_device_present => false or true
 
+```puppet
+   if not bmc_device_present {
+      notify{"Purchase better hardware":}
+   }
+```
 ### Types Provided
 
 - bmcuser  (adds user to bmc device)
