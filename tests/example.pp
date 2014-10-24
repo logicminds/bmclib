@@ -11,7 +11,7 @@ bmc { 'ipmidevice':
   require  => Class['bmclib'],
 }
 
-bmcuser { 'bmcuser'
+bmcuser { 'bmcuser':
   ensure    => enabled,
   provider  => 'freeipmi',
   privlevel => 'admin',
