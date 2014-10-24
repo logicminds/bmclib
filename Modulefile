@@ -1,5 +1,5 @@
 name 'logicminds-bmclib'
-version '0.0.1'
+version '0.1.0'
 author 'Corey Osman'
 license 'LGPLv2.1'
 project_page 'http://www.github.com/logicminds/bmclib'
