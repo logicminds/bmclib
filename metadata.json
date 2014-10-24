@@ -2,7 +2,7 @@
   "name": "bmclib",
   "author": "Corey Osman",
   "description": "",
-  "license": "GPLv3",
+  "license": "LGPLv2.1",
   "project_page": "http://www.github.com/logicminds/bmclib",
   "source": "",
   "summary": "The bmclib is a module that automates deployment of ipmi devices and provides other useful types",
