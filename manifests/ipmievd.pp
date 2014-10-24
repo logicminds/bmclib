@@ -33,9 +33,9 @@ class bmclib::ipmievd {
     }
     'RedHat': {
       file { '/etc/sysconfig/ipmievd':
-        ensure  => 'present',
+        ensure => 'present',
 #        content => 'IPMIEVD_OPTIONS="sel pidfile=/var/run/ipmievd.pid"',
-        notify  => Service['ipmievd'],
+        notify => Service['ipmievd'],
       }
     }
     default: { }

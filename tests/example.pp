@@ -18,5 +18,5 @@ bmcuser { 'bmcuser':
   username  => 'username',
   userpass  => 'userpass',
   force     => true,
-  require  => Class['bmclib'],
+  require   => Class['bmclib'],
 }

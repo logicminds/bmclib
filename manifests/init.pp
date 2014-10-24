@@ -35,8 +35,8 @@ class bmclib (
       $service_name = 'openipmi'
 
       file { '/etc/default/ipmi':
-        ensure => 'present',
-        notify => Service[$service_name],
+        ensure  => 'present',
+        notify  => Service[$service_name],
         content => 'ENABLED=true',
       }
     }
@@ -57,13 +57,13 @@ class bmclib (
   }
 
   package { 'ipmitool':
-    name   => 'ipmitool',
     ensure => $package_ensure,
+    name   => 'ipmitool',
   }
 
   package { 'ipmidriver':
-    name   => $openipmi,
     ensure => $package_ensure,
+    name   => $openipmi,
   }
 
   service { $service_name:
