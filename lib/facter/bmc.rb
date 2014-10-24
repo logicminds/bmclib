@@ -29,6 +29,7 @@ Facter.add("bmc_gateway", :timeout => 2) do
 end
 
 
+
  def lanconfig
     @lanconfig ||= parse_laninfo
   end

@@ -23,6 +23,7 @@ To begin you are supposed to run:
 - bmc_ip => 192.168.1.41
 - bmc_mac => 00:17:A4:49:AB:70
 - bmc_subnet => 255.255.255.0
+- bmc_device_present => "false","true"
 
 ### Types Provided
 
