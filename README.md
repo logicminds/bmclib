@@ -124,7 +124,8 @@ bmcuser { 'bmcuser'
 
 
 ##Limitations
-Works on *nix systems or whatever can run openipmi and ipmitool
+Works on *nix systems or whatever can run openipmi and ipmitool.
+Not all linux operating systems are listed in the support metadata.  YMMV.
 
 ## Contributors
 * Corey Osman <corey@logicminds.biz>  (Original Author)

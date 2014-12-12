@@ -1,12 +1,13 @@
 {
   "name": "bmclib",
   "author": "Corey Osman",
-  "description": "",
-  "license": "LGPLv2.1",
+  "description": "Puppet type for controlling the bmc as well as other useful facts",
+  "license": "LGPL-2.1+",
   "project_page": "http://www.github.com/logicminds/bmclib",
-  "source": "",
+  "source": "https://github.com/logicminds/bmclib.git",
   "summary": "The bmclib is a module that automates deployment of ipmi devices and provides other useful types",
-  "version": "0.1.1",
+  "version": "0.1.2",
+  "issues_url": "https://github.com/logicminds/bmclib/issues",
   "checksums": {
     "Modulefile": "b4679dca16c715958dbed014ac3c29cb",
     "README": "9fa9834c854c341d7ac12c5bc01f831e",
@@ -54,5 +55,59 @@
       "doc": "Manage BMC devices"
     }
   ],
-  "dependencies": []
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Scientific",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "10.04",
+        "12.04",
+        "14.04"
+      ]
+    }
+  ],
+  "dependencies": [
+
+  ]
 }

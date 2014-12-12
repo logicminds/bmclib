@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 group :development, :test do
   gem 'rake'
-  gem 'puppetlabs_spec_helper', '>= 0.8.2', :require => false
+  gem 'bodeco_module_helper', :git => 'https://github.com/bodeco/bodeco_module_helper.git'
 end
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']
