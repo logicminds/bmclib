@@ -1,5 +1,5 @@
 {
-  "name": "bmclib",
+  "name": "logicminds-bmclib",
   "author": "Corey Osman",
   "description": "Puppet type for controlling the bmc as well as other useful facts",
   "license": "LGPL-2.1+",
