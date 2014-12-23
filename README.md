@@ -6,10 +6,10 @@
 
 1. [Overview](#overview)
 2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with [bmclib]](#setup)
-    * [What [bmclib] affects](#what-[bmclib]-affects)
+3. [Setup - The basics of getting started with bmclib](#setup)
+    * [What bmclib affects](#what-[bmclib]-affects)
     * [Setup requirements](#setup-requirements)
-    * [Beginning with [bmclib]](#beginning-with-[bmclib])
+    * [Beginning with bmclib](#beginning-with-[bmclib])
 4. [Usage - Configuration options and additional functionality](#usage)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [Limitations - OS compatibility, etc.](#limitations)
@@ -28,7 +28,7 @@ configuration around your bmc device.
 
 ##Setup
 
-###What [bmclib] affects
+###What bmclib affects
 
 * The impi device on your server, which you should only have one of.
 * Installs openipmi and starts the openipmi service
@@ -40,7 +40,7 @@ configuration around your bmc device.
 - ipmitool installed
 - openimpi installed and running
 
-###Beginning with [bmclib] 0.1.0
+###Beginning with bmclib
 
 I have created a puppet class to assist with install the openipmi driver and ipmitool, but your not required to use this
 class if you already have something working.
