@@ -1,4 +1,5 @@
 pkg/
+.idea
 .DS_Store
 metadata.json
 coverage/

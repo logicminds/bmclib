@@ -42,8 +42,9 @@ configuration around your bmc device.
 
 ###Beginning with bmclib
 
-I have created a puppet class to assist with install the openipmi driver and ipmitool, but your not required to use this
-class if you already have something working.
+I have created a puppet class to assist with installing the openipmi driver and ipmitool, but your not required to use this
+class if you already have something working. Without openipmi working on your puppet managed system, the facts and providers
+will not be available.
 
 ```puppet
 include 'bmclib'     
