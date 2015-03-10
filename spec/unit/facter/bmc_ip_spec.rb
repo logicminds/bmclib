@@ -10,7 +10,7 @@ describe :bmc_ip, :type => :fact do
     allow(Facter::Core::Execution).to receive(:exec).with('/usr/bin/ipmitool lan print 2 2>/dev/null').and_return(@data)
     allow(Facter::Core::Execution).to receive(:exec).with('/usr/bin/ipmitool lan print 1 2>/dev/null').and_return(@data)
     allow(Facter::Core::Execution).to receive(:which).with('ipmitool').and_return('/usr/bin/ipmitool')
-    allow(Facter).to receive(:value).with(:boardmanufacturer).and_return('HP')
+    allow(Facter).to receive(:value).with(:manufacturer).and_return('HP')
     allow(Facter).to receive(:value).with(:kernel).and_return('Linux')
     allow(Facter).to receive(:value).with(anything)
     allow(Facter).to receive(:[]).with(anything)

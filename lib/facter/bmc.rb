@@ -40,7 +40,7 @@ def parse_laninfo
     'Intel Corporation' => 3,
     'HP' => 2,
   }
-  channel = channel_lookup.fetch(Facter.value(:boardmanufacturer), 1)
+  channel = channel_lookup.fetch(Facter.value(:manufacturer), 1)
   landata = Facter::Core::Execution.exec("#{ipmitool} lan print #{channel} 2>/dev/null")
   laninfo = {}
 
