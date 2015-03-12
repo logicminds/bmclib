@@ -12,13 +12,13 @@ describe 'bmclib::ipmievd', :type => 'class' do
     }
     end
 
-    it { should contain_service('ipmievd').with(
+    it { is_expected.to contain_service('ipmievd').with(
       :ensure     => 'running',
       :enable     => 'true',
       :hasrestart => 'true',
       :hasstatus  => 'true'
     )}
-    it { should contain_file('/etc/sysconfig/ipmievd').with(
+    it { is_expected.to contain_file('/etc/sysconfig/ipmievd').with(
       :ensure  => 'present',
       :path    => '/etc/sysconfig/ipmievd',
 #      :content => 'IPMIEVD_OPTIONS="sel pidfile=/var/run/ipmievd.pid"',
@@ -39,23 +39,18 @@ describe 'bmclib::ipmievd', :type => 'class' do
     }
     end
 
-    it { should contain_service('ipmievd').with(
+    it { is_expected.to contain_service('ipmievd').with(
       :ensure     => 'running',
       :enable     => 'true',
       :hasrestart => 'true',
       :hasstatus  => 'true'
     )}
-    it { should contain_file('/etc/default/ipmievd').with(
+    it { is_expected.to contain_file('/etc/default/ipmievd').with(
       :ensure  => 'present',
       :path    => '/etc/default/ipmievd',
       :content => 'ENABLED=true',
       :notify  => 'Service[ipmievd]'
     )}
-    it 'should contain File[/etc/default/ipmievd] with contents "ENABLED=true"' do
-      verify_contents(subject, '/etc/default/ipmievd', [
-        'ENABLED=true',
-      ])
-    end
   end
 
 end

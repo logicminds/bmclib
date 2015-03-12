@@ -5,13 +5,13 @@ require 'spec_helper'
 describe Puppet::Type.type(:bmc) do
   [:name, :provider].each do |param|
     it "should have a #{param} parameter" do
-      Puppet::Type.type(:bmc).attrtype(param).should == :param
+      expect(Puppet::Type.type(:bmc).attrtype(param)).to eq(:param)
     end
   end
 
   [:ipsource,:ensure, :ip, :netmask, :gateway, :vlanid].each do |param|
     it "should have an #{param} property" do
-      Puppet::Type.type(:bmc).attrtype(param).should == :property
+      expect(Puppet::Type.type(:bmc).attrtype(param)).to eq(:property)
     end
   end
 
@@ -36,7 +36,7 @@ describe Puppet::Type.type(:bmc), "when validating attribute values" do
      end
      it 'should default to dhcp' do
        type = Puppet::Type.type(:bmc).new(:name => "device1", :ensure => :present)
-       type.should(:ipsource).should == :dhcp
+       expect(type.should(:ipsource)).to eq(:dhcp)
      end
   end
 

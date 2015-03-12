@@ -61,7 +61,7 @@ Cipher Suite Priv Max   : XXXXXXXXXXXXXXX
   end
 
   it "should be an instance of Puppet::Type::Bmc::Ipmitool" do
-    @provider.should be_an_instance_of Puppet::Type::Bmc::ProviderIpmitool
+    expect(@provider).to be_an_instance_of Puppet::Type::Bmc::ProviderIpmitool
   end
 
   describe 'install' do

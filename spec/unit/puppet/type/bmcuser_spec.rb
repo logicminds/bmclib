@@ -4,27 +4,27 @@ require 'spec_helper'
 describe Puppet::Type.type(:bmcuser) do
   [:name, :provider, :force].each do |param|
     it "should have a #{param} parameter" do
-      Puppet::Type.type(:bmcuser).attrtype(param).should == :param
+      expect(Puppet::Type.type(:bmcuser).attrtype(param)).to eq(:param)
     end
   end
 
   [:username, :ensure, :userpass, :privlevel].each do |param|
     it "should have an #{param} property" do
-      Puppet::Type.type(:bmcuser).attrtype(param).should == :property
+      expect(Puppet::Type.type(:bmcuser).attrtype(param)).to eq(:property)
     end
   end
 
   describe 'username property' do
      it 'should return the username' do
        user = Puppet::Type.type(:bmcuser).new(:name => "Stan", :ensure => :present, :username => 'stanuser')
-       user.should(:username).should == 'stanuser'
+       expect(user.should(:username)).to eq('stanuser')
      end
   end
 
   describe 'userpass property' do
      it 'should return the userpass' do
        user = Puppet::Type.type(:bmcuser).new(:name => "Stan", :ensure => :present, :userpass => 'secret')
-       user.should(:userpass).should == 'secret'
+       expect(user.should(:userpass)).to eq('secret')
      end
   end
 
@@ -38,7 +38,7 @@ describe Puppet::Type.type(:bmcuser) do
   describe 'privlevel property' do
      it 'should return the privlevel' do
        user = Puppet::Type.type(:bmcuser).new(:name => "Stan", :ensure => :present, :privlevel => 'admin')
-       user.should(:privlevel).should == :admin
+       expect(user.should(:privlevel)).to eq(:admin)
      end
   end
 

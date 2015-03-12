@@ -26,7 +26,7 @@ describe provider_class do
   end
 
   it "should be an instance of Puppet::Type::Bmcuser::Provider::Ipmitool" do
-    provider.should be_an_instance_of Puppet::Type::Bmcuser::ProviderIpmitool
+    expect(provider).to be_an_instance_of Puppet::Type::Bmcuser::ProviderIpmitool
   end
 
   [:admin, :user, :operator, :callback, :administrator, :noaccess].each do |priv|
@@ -41,7 +41,7 @@ describe provider_class do
       }
     end
     let (:provider) { described_class.new(resource) }
-    it { provider.should be_an_instance_of Puppet::Type::Bmcuser::ProviderIpmitool }
+    it { expect(provider).to be_an_instance_of Puppet::Type::Bmcuser::ProviderIpmitool }
 
   end
   context 'invalid privilege type' do

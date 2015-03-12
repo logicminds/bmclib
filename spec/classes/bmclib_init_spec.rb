@@ -14,21 +14,21 @@ describe 'bmclib', :type => 'class' do
     }
     end
 
-    it { should contain_package('ipmitool').with(
+    it { is_expected.to contain_package('ipmitool').with(
       :ensure => 'present'
     )}
-    it { should contain_package('ipmidriver').with(
+    it { is_expected.to contain_package('ipmidriver').with(
       :ensure => 'present',
       :name   => 'OpenIPMI'
     )}
-    it { should contain_service('ipmi').with(
+    it { is_expected.to contain_service('ipmi').with(
       :ensure     => 'running',
       :enable     => 'true',
       :hasrestart => 'true',
       :hasstatus  => 'true',
       :require    => [ 'Package[ipmitool]', 'Package[ipmidriver]' ]
     )}
-    it { should contain_file('/etc/sysconfig/ipmi').with(
+    it { is_expected.to contain_file('/etc/sysconfig/ipmi').with(
       :ensure  => 'present',
       :path    => '/etc/sysconfig/ipmi',
       :notify  => 'Service[ipmi]'
@@ -50,31 +50,26 @@ describe 'bmclib', :type => 'class' do
     }
     end
 
-    it { should contain_package('ipmitool').with(
+    it { is_expected.to contain_package('ipmitool').with(
       :ensure => 'present'
     )}
-    it { should contain_package('ipmidriver').with(
+    it { is_expected.to contain_package('ipmidriver').with(
       :ensure => 'present',
       :name   => 'openipmi'
     )}
-    it { should contain_service('openipmi').with(
+    it { is_expected.to contain_service('openipmi').with(
       :ensure     => 'running',
       :enable     => 'true',
       :hasrestart => 'true',
       :hasstatus  => 'true',
       :require    => [ 'Package[ipmitool]', 'Package[ipmidriver]' ]
     )}
-    it { should contain_file('/etc/default/ipmi').with(
+    it { is_expected.to contain_file('/etc/default/ipmi').with(
       :ensure  => 'present',
       :path    => '/etc/default/ipmi',
       :content => 'ENABLED=true',
       :notify  => 'Service[openipmi]'
     )}
-    it 'should contain File[/etc/default/ipmi] with contents "ENABLED=true"' do
-      verify_contents(subject, '/etc/default/ipmi', [
-        'ENABLED=true',
-      ])
-    end
   end
 
 end

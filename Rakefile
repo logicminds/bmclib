@@ -1,6 +1,5 @@
-require 'rubygems'
-begin
-  require 'bodeco_module_helper/rake_tasks'
-rescue LoadError
-  puts 'Execute `bundle install` to deploy gem dependencies.'
+require 'puppetlabs_spec_helper/rake_tasks'
+require 'puppet_blacksmith/rake_tasks'
+Blacksmith::RakeTask.new do |t|
+  t.tag_pattern = "v%s" # Use a custom pattern with git tag. %s is replaced with the version number.
 end
