@@ -2,6 +2,7 @@ Puppet::Type.type(:bmc).provide(:freeipmi) do
   desc "Provides freeipmi support for the bmc type"
 
   commands :ipmicmd => 'bmc-config'
+  commands :sh => 'sh'
   defaultfor :osfamily => :redhat
 
   confine :is_virtual => "false"
@@ -43,7 +44,6 @@ Puppet::Type.type(:bmc).provide(:freeipmi) do
 
   # return all instances of this resource which really should only be one instance
   def self.instances
-#IP_Address_Source IP_Address MAC_Address Subnet_Mask Default_Gateway_IP_Address
     info       = self.laninfo
     name       = info["MAC_Address"]
     ipsource   = info["IP_Address_Source"].downcase!
@@ -57,15 +57,6 @@ Puppet::Type.type(:bmc).provide(:freeipmi) do
         :ipsource => ipsource, :ip => ip,
         :netmask => netmask, :gateway => gateway,
         :vlanid => vlanid )
-  end
-
-  def self.prefetch(resources)
-    devices = instances
-    resources.keys.each do | name|
-      if provider = devices.find{|device| device.name == name }
-        resources[name].provider = provider
-      end
-    end
   end
 
   # bmc puppet parameters to get / set
@@ -122,7 +113,8 @@ Puppet::Type.type(:bmc).provide(:freeipmi) do
 
 
   def self.laninfo
-    landata = ipmicmd([ "--checkout", "--section", "Lan_Conf", "--section", "Lan_Channel", "--disable-auto-probe" ])
+    # `bmc-config --section Lan_Conf --verbose` can return a non-zero RC so we have to wrap this
+    landata = sh([ "-c", "(bmc-config --verbose --checkout --section Lan_Conf --section Lan_Channel --disable-auto-probe --verbose || :)" ])
     output = landata.lines.find_all { |l| l =~ /^\s+[^#]/}
     if ! output.empty?
       info = Hash[output.map { |e| e.split }]
