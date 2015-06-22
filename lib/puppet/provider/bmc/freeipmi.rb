@@ -4,7 +4,6 @@ Puppet::Type.type(:bmc).provide(:freeipmi, :parent => Puppet::Provider::Bmc) do
 
   commands :ipmicmd => 'bmc-config'
   commands :sh => 'sh'
-  defaultfor :osfamily => :redhat
 
   # return all instances of this resource which really should only be one instance
   def self.instances

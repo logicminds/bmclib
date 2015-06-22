@@ -3,6 +3,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool, :parent => Puppet::Provider::Bmc) do
   desc "Provides ipmitool support for the bmc type"
 
   commands :ipmitoolcmd => 'ipmitool'
+  defaultfor :osfamily => :redhat
 
   # return all instances of this resource which really should only be one instance
   def self.instances
