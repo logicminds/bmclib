@@ -37,8 +37,11 @@ def parse_laninfo
     return {}
   end
   channel_lookup = {
+    'Dell Inc.'         => 1,
+    'FUJITSU'           => 2,
+    'FUJITSU SIEMENS'   => 2,
+    'HP'                => 2,
     'Intel Corporation' => 3,
-    'HP' => 2,
   }
   channel = channel_lookup.fetch(Facter.value(:manufacturer), 1)
   landata = Facter::Core::Execution.exec("#{ipmitool} lan print #{channel} 2>/dev/null")
