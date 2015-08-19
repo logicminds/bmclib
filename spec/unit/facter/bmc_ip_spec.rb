@@ -25,6 +25,11 @@ describe :bmc_ip, :type => :fact do
   end
 
   describe :is_virtual do
+    before :each do
+      bdp = double(Facter::Util::Fact)
+      allow(bdp).to receive(:value).and_return(true)
+      allow(Facter).to receive(:[]).with(:bmc_device_present).and_return(bdp)
+    end
     describe :boolean_true do
       it 'should not contain ip' do
         iv = double(Facter::Util::Fact)
