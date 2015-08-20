@@ -28,12 +28,12 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
     if resource[:vlanid]
       vlanid = resource[:vlanid]
     end
-    enable_channel
+    #enable_channel  # TODO is this needed? what does this do ?
   end
 
   def remove
     ipsrc = "dhcp"
-    disable_channel
+    #disable_channel  #TODO is this needed?
   end
 
   def exists?
