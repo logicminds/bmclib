@@ -5,7 +5,7 @@ provider_class = Puppet::Type.type(:bmc).provider(:ipmitool)
 describe provider_class do
   subject { provider_class }
 
-  let(:facts)do {:is_virtual => 'false'} end
+  let(:facts)do {:is_virtual => 'false', :bmc_device_present => true} end
 
   let(:ipmitool_lan_print) do
      <<-OUTPUT

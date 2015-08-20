@@ -2,9 +2,10 @@ branches:
   only:
     - master
     - development
+    - gh-27
 language: ruby
 bundler_args: --without development integration
-script: "bundle exec rake spec SPEC_OPTS='--format documentation'"
+script: "bundle exec gem list && bundle exec rake spec"
 rvm:
 - 1.9.3
 - 2.0.0
