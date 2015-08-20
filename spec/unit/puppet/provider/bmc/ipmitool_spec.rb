@@ -5,8 +5,6 @@ provider_class = Puppet::Type.type(:bmc).provider(:ipmitool)
 describe provider_class do
   subject { provider_class }
 
-  let(:facts)do {:is_virtual => 'false', :bmc_device_present => true} end
-
   let(:ipmitool_lan_print) do
      <<-OUTPUT
 Set in Progress         : Set Complete
@@ -40,12 +38,16 @@ Cipher Suite Priv Max   : XXXXXXXXXXXXXXX
   end
 
   before :each do
-    File.stubs(:exists?).returns(true)
-    Puppet::Util.stubs(:which).with("ipmitool").returns("/bin/ipmitool")
-    subject.stubs(:which).with("ipmitool").returns("/bin/ipmitool")
-    subject.stubs(:ipmitoolcmd).with([ "lan", "print", "1"]).returns(ipmitool_lan_print)
-    subject.stubs(:ipmitoolcmd).with([ "lan", "set", "1", "access", "on"]).returns(true)
-    subject.stubs(:ipmitoolcmd).with([ "lan", "set", "1", "ipsrc", "dhcp" ]).returns(true)
+    allow(File).to receive(:exists?).and_return(true)
+    allow(Puppet::Util).to receive(:which).with("ipmitool").and_return("/bin/ipmitool")
+    allow(subject).to receive(:which).with("ipmitool").and_return("/bin/ipmitool")
+    allow(subject).to receive(:ipmitoolcmd).with([ "lan", "print", "1"]).and_return(ipmitool_lan_print)
+    allow(subject).to receive(:ipmitoolcmd).with([ "lan", "set", "1", "access", "on"]).and_return(true)
+    allow(subject).to receive(:ipmitoolcmd).with([ "lan", "set", "1", "ipsrc", "dhcp" ]).and_return(true)
+    allow(subject).to receive(:ipmitoolcmd).with([ "lan", "print", "2"]).and_return(ipmitool_lan_print)
+    allow(subject).to receive(:ipmitoolcmd).with([ "lan", "set", "2", "access", "on"]).and_return(true)
+    allow(subject).to receive(:ipmitoolcmd).with([ "lan", "set", "2", "ipsrc", "dhcp" ]).and_return(true)
+
 
     @resource =  Puppet::Type::Bmc.new( 
       { :ip       => '192.168.1.34',
@@ -59,24 +61,55 @@ Cipher Suite Priv Max   : XXXXXXXXXXXXXXX
     )
     @provider = provider_class.new(@resource)
   end
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      before :each do
+        Facter.clear
+        facts.merge!(:bmc_device_present => true)
+        facts.merge!(:is_virtual => false)
+        facts.each do |k, v|
+          allow(Facter).to receive(:fact).with(k).and_return Facter.add(k) { setcode { v } }
+        end
+      end
 
-  it "should be an instance of Puppet::Type::Bmc::Ipmitool" do
-    expect(@provider).to be_an_instance_of Puppet::Type::Bmc::ProviderIpmitool
-  end
+      it "should be an instance of Puppet::Type::Bmc::Ipmitool" do
+        expect(@provider).to be_an_instance_of Puppet::Type::Bmc::ProviderIpmitool
+      end
+      it 'enables the channel' do
+        expect(subject).to receive(:ipmitoolcmd).with(["lan", "set", "1", "access", "on"])
+        @provider.install
+      end
 
-  describe 'install' do
-    it 'enables the channel' do
-      subject.expects(:ipmitoolcmd).with(["lan", "set", "1", "access", "on"])
-      @provider.install
+      it 'should set the ipsource' do
+        expect(subject).to receive(:ipmitoolcmd).with([ "lan", "set", "1", "ipsrc", "dhcp" ])
+        @provider.ipsource='dhcp'
+      end
+
+      describe 'HP device' do
+        before :each do
+           allow(Facter).to receive(:value).with(:manufacturer).and_return('HP')
+        end
+
+        it 'get ipsource' do
+          expect(subject).to receive(:ipmitoolcmd).with([ "lan", "print", "2"])
+          @provider.ipsource
+        end
+
+        it 'should set the ipsource' do
+          expect(subject).to receive(:ipmitoolcmd).with([ "lan", "set", "2", "ipsrc", "dhcp" ])
+          @provider.ipsource='dhcp'
+        end
+
+      end
     end
   end
 
-  describe 'ip' do
-    it 'should set the ipsource' do
-      subject.expects(:ipmitoolcmd).with([ "lan", "set", "1", "ipsrc", "dhcp" ])
-      @provider.ipsource='dhcp'
-    end
-  end 
+
+
+
+
+
+
 
 end
 

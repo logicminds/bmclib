@@ -11,6 +11,7 @@ group :test do
     gem "metadata-json-lint"
     gem 'puppet-syntax'
     gem 'puppet-lint'
+    gem 'rspec-puppet-facts', :require => false
 end
 
 group :integration do
