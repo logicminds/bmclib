@@ -8,8 +8,15 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
   #      # check to see that openipmi driver is loaded and ipmi device exists
   confine :true => File.exists?('/dev/ipmi0') || File.exists?('/dev/ipmi/0') || File.exists?('/dev/ipmidev/0')
 
+  CHANNEL_LOOKUP = {
+      'Dell Inc.'         => '1',
+      'FUJITSU'           => '2',
+      'FUJITSU SIEMENS'   => '2',
+      'HP'                => '2',
+      'Intel Corporation' => '3',
+  }
+
   @users = {}
-  @channel = 1
   @priv = {
     :administrator => 4,
     :admin => 4,
@@ -25,7 +32,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
     if not userexists?(user)
       ipmitoolcmd([ "user", "set", "name", id, user] )
       ipmitoolcmd([ "user", "set", "password", id, resource[:password] ])
-      ipmitoolcmd([ "user", "priv", id, @priv[resource[:privlevel]], @channel ])
+      ipmitoolcmd([ "user", "priv", id, @priv[resource[:privlevel]], channel ])
       ipmitoolcmd([ "user", "enable", id ])
 
     else
@@ -33,7 +40,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
         ipmitoolcmd([ "user", "enable", id ])
       end
       if not privequal?(user)
-        ipmitoolcmd([ "user", "priv", id, @priv[resource[:privlevel]], @channel ])
+        ipmitoolcmd([ "user", "priv", id, @priv[resource[:privlevel]], channel ])
       end
       if resource[:force]
         ipmitoolcmd([ "user", "set", "password", id, resource[:password] ])
@@ -45,7 +52,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
 
   def destroy
     ipmitoolcmd([ "user", "set", "name", id, user ])
-    ipmitoolcmd([ "user", "priv", id, @priv[:noaccess], @channel ])
+    ipmitoolcmd([ "user", "priv", id, @priv[:noaccess], channel ])
     ipmitoolcmd([ "user", "disable", id ])
   end
 
@@ -92,7 +99,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
 
   def userlist
     if @users.length < 1
-      userdata = ipmitoolcmd([ "user", "list", "1" ])
+      userdata = ipmitoolcmd([ "user", "list", channel ])
       @users = parse(userdata)
     end
     @users
@@ -127,7 +134,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
   end
 
   def self.instances
-    userdata = ipmitoolcmd([ "user", "list", "1" ])
+    userdata = ipmitoolcmd([ "user", "list", CHANNEL_LOOKUP.fetch(Facter.value(:manufacturer), '1')])
     userdata.lines.each do | line|
       user = {}
       # skip the header
@@ -154,6 +161,10 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
         resources[name].provider = provider
       end
     end
+  end
+
+  def channel
+    CHANNEL_LOOKUP.fetch(Facter.value(:manufacturer), '1')
   end
 
 end
