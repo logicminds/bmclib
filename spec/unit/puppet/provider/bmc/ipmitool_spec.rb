@@ -82,7 +82,7 @@ Cipher Suite Priv Max   : XXXXXXXXXXXXXXX
 
       it 'should set the ipsource' do
         expect(subject).to receive(:ipmitoolcmd).with([ "lan", "set", "1", "ipsrc", "dhcp" ])
-        @provider.ipsource='dhcp'
+        @provider.set_ipsource('dhcp')
       end
 
       describe 'HP device' do
@@ -97,7 +97,7 @@ Cipher Suite Priv Max   : XXXXXXXXXXXXXXX
 
         it 'should set the ipsource' do
           expect(subject).to receive(:ipmitoolcmd).with([ "lan", "set", "2", "ipsrc", "dhcp" ])
-          @provider.ipsource='dhcp'
+          @provider.set_ipsource('dhcp')
         end
 
       end

@@ -7,6 +7,8 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   confine :bmc_device_present => [:true, true]
   confine :is_virtual => "false"
 
+  mk_resource_methods
+
   CHANNEL_LOOKUP = {
       'Dell Inc.'         => '1',
       'FUJITSU'           => '2',
@@ -23,97 +25,46 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
       gateway = resource[:gateway]
     end
 
-    ipsrc = resource[:ipsource]
+    ipsource = resource[:ipsource]
     if resource[:vlanid]
       vlanid = resource[:vlanid]
     end
-    #enable_channel  # TODO is this needed? what does this do ?
+    enable_channel  # TODO is this needed? what does this do ?
   end
 
   def remove
-    ipsrc = "dhcp"
-    #disable_channel  #TODO is this needed?
+    ipsource = "dhcp"
+    disable_channel  #TODO is this needed?
   end
 
   def exists?
-    # since snmp and vlan information won't be available everytime, so we can't reapply the config everytime
-    begin
-      value = ip.eql?(resource[:ip]) & netmask.eql?(resource[:netmask]) & gateway.eql?(resource[:gateway])
-    rescue
-      false
-    end
+    @property_hash[:ensure] == :present
   end
-
-  ##### END -- These are the default ensurable methods that must be implemented
-
 
   # return all instances of this resource which really should only be one instance
   def self.instances
-    info       = self.laninfo
-    name       = info["mac address"]
-    ipsource   = info["ip address source"].downcase!.to_sym
-    ip         = info["ip address"]
-    netmask    = info["subnet mask"]
-    gateway    = info["default gateway ip"]
-    vlanid     = info["802.1q vlan id"]
-
-    new(:name => name, :ensure => :present,
-        :ipsource => ipsource, :ip => ip,
-        :netmask => netmask, :gateway => gateway,
-        :vlanid => vlanid )
+    info          = self.laninfo
+    inst = new(
+        :name     => info["mac address"],
+        :ensure   => :present,
+        :ip       => info["ip address"],
+        :netmask  => info["subnet mask"],
+        :gateway  => info["default gateway ip"],
+        :vlanid   => info["802.1q vlan id"],
+        :ipsource => info["ip address source"],
+    )
+    [inst]
   end
 
   def self.prefetch(resources)
     devices = instances
-    unless devices
+    if devices
       resources.keys.each do | name|
         if provider = devices.find{|device| device.name == name }
           resources[name].provider = provider
         end
       end
     end
-  end
-
-  # bmc puppet parameters to get / set
-  # if your making a new provider implement all of these
-  def ipsource
-    lanconfig["ip address source"].downcase!
-  end
-
-  def ipsource=(source)
-    ipmitoolcmd([ "lan", "set", channel, "ipsrc", source ])
-  end
-
-  def ip
-    lanconfig["ip address"]
-  end
-
-  def ip=(address)
-    ipmitoolcmd([ "lan", "set", channel, "ipaddr", address ])
-  end
-
-  def netmask
-    lanconfig["subnet mask"]
-  end
-
-  def netmask=(subnet)
-    ipmitoolcmd([ "lan", "set", channel, "netmask", subnet ])
-  end
-
-  def gateway
-    lanconfig["default gateway ip"]
-  end
-
-  def gateway=(address)
-    ipmitoolcmd([ "lan", "set", channel, "defgw", "ipaddr", address ])
-  end
-
-  def vlanid
-    lanconfig["802.1q vlan id"]
-  end
-
-  def vlanid=(vid)
-    ipmitoolcmd([ "lan", "set", channel, "vlan", "id", vid ])
   end
 
   #def snmp
@@ -126,7 +77,6 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
 
   # end - bmc parameters
 
-
   def self.laninfo
     landata = ipmitoolcmd([ "lan", "print", CHANNEL_LOOKUP.fetch(Facter.value(:manufacturer), '1') ])
     info = {}
@@ -138,6 +88,48 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
       info[key] = value
     end
     info
+    info['ip address source'] = convert_ip_source(info['ip address source'])
+    info["802.1q vlan id"] = convert_vlanid(info["802.1q vlan id"])
+    info
+  end
+
+  def gateway=(address)
+    ipmitoolcmd([ "lan", "set", channel, "defgw", "ipaddr", address ])
+  end
+
+  def ipsource=(source)
+    ipmitoolcmd([ "lan", "set", channel, "ipsrc", source.to_s ])
+  end
+
+  def ip=(address)
+    ipmitoolcmd([ "lan", "set", channel, "ipaddr", address ])
+  end
+
+  def netmask=(subnet)
+    ipmitoolcmd([ "lan", "set", channel, "netmask", subnet ])
+  end
+
+  def vlanid=(vid)
+    ipmitoolcmd([ "lan", "set", channel, "vlan", "id", vid ])
+  end
+
+  def self.convert_vlanid(id)
+    if id =~ /Disabled/i
+      'off'
+    else
+      id
+    end
+  end
+
+  def self.convert_ip_source(src)
+    case src
+      when /static/i
+        :static
+      when /dhcp/i
+        :dhcp
+      else
+        src
+    end
   end
 
   private
@@ -174,7 +166,4 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   def lanconfig
     @lanconfig ||= self.class.laninfo
   end
-
-
-
 end
