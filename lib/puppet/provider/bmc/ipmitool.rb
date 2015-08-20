@@ -2,7 +2,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   desc "Provides ipmitool support for the bmc type"
 
   commands :ipmitoolcmd => 'ipmitool'
-
+  confine :bmc_device_present => [:true, true]
   confine :is_virtual => "false"
   # if the open ipmi driver does not exist we can perform any of these configurations
   #      # check to see that openipmi driver is loaded and ipmi device exists

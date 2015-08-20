@@ -46,7 +46,7 @@ describe Puppet::Type.type(:bmc), "when validating attribute values" do
      end
 
      it 'should raise ArgumentError if not valid ipaddress' do
-       expect{Puppet::Type.type(:bmc).new(:name => "device1", :ensure => :present, :ip => '290.221.223.1')}.to raise_error
+       expect{Puppet::Type.type(:bmc).new(:name => "device1", :ensure => :present, :ip => '290.221.223.1')}.to raise_error(Puppet::ResourceError)
      end
 
   end
@@ -57,7 +57,7 @@ describe Puppet::Type.type(:bmc), "when validating attribute values" do
     end
 
     it 'should raise ArgumentError if not valid netmask' do
-      expect{Puppet::Type.type(:bmc).new(:name => "device1", :ensure => :present, :netmask => '290.221.223.1')}.to raise_error
+      expect{Puppet::Type.type(:bmc).new(:name => "device1", :ensure => :present, :netmask => '290.221.223.1')}.to raise_error(Puppet::ResourceError)
     end
   end
 
@@ -67,7 +67,7 @@ describe Puppet::Type.type(:bmc), "when validating attribute values" do
     end
 
     it 'should raise ArgumentError if not valid gateway' do
-      expect{Puppet::Type.type(:bmc).new(:name => "device1", :ensure => :present, :gateway => '290.221.223.1')}.to raise_error
+      expect{Puppet::Type.type(:bmc).new(:name => "device1", :ensure => :present, :gateway => '290.221.223.1')}.to raise_error(Puppet::ResourceError)
     end
   end
 
@@ -79,7 +79,7 @@ describe Puppet::Type.type(:bmc), "when validating attribute values" do
       Puppet::Type.type(:bmc).new(:name => "device1", :ensure => :present, :vlanid => '4094')
     end
     it 'should raise ArgumentError if not valid vlanid' do
-      expect{Puppet::Type.type(:bmc).new(:name => "device1", :ensure => :present, :vlanid => '9000')}.to raise_error
+      expect{Puppet::Type.type(:bmc).new(:name => "device1", :ensure => :present, :vlanid => '9000')}.to raise_error(Puppet::ResourceError)
     end
   end
 

@@ -15,7 +15,7 @@ describe provider_class do
   }
   let (:provider) { described_class.new(resource) }
 
-  let(:facts)do {:is_virtual => 'false'} end
+  let(:facts)do {:is_virtual => 'false', :bmc_device_present => true} end
 
 
   before :each do

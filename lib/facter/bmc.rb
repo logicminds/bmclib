@@ -1,5 +1,4 @@
 #bmc.rb
-
 Facter.add("bmc_ip", :timeout => 2) do
   confine :is_virtual => [:false, false]
   confine :bmc_device_present => [:true, true]
