@@ -17,7 +17,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
 
   ##### These are the default ensurable methods that must be implemented
   def install
-    if resource[:ipsource] == "static"
+    if resource[:ipsource] == :static
       ip = resource[:ip]
       netmask = resource[:netmask]
       gateway = resource[:gateway]
@@ -51,7 +51,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   def self.instances
     info       = self.laninfo
     name       = info["mac address"]
-    ipsource   = info["ip address source"].downcase!
+    ipsource   = info["ip address source"].downcase!.to_sym
     ip         = info["ip address"]
     netmask    = info["subnet mask"]
     gateway    = info["default gateway ip"]
