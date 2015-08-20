@@ -1,16 +1,27 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-group :development, :test do
-  gem 'rake'
-  gem 'puppetlabs_spec_helper'
-  gem 'puppet-blacksmith'
- # gem 'bodeco_module_helper', :git => 'https://github.com/bodeco/bodeco_module_helper.git'
+group :test do
+    gem "rake"
+    gem "puppet", ENV['PUPPET_VERSION'] || '~> 3.7.3'
+    gem "rspec-puppet", :git => 'https://github.com/rodjek/rspec-puppet.git'
+    gem "puppetlabs_spec_helper"
+    gem 'rspec-puppet-utils', :git => 'https://github.com/Accuity/rspec-puppet-utils.git'
+    gem 'hiera-puppet-helper', :git => 'https://github.com/bobtfish/hiera-puppet-helper.git'
+    gem "metadata-json-lint"
+    gem 'puppet-syntax'
+    gem 'puppet-lint'
 end
 
-if puppetversion = ENV['PUPPET_GEM_VERSION']
-  gem 'puppet', puppetversion, :require => false
-else
-  gem 'puppet', :require => false
+group :integration do
+    gem "beaker", :git => 'https://github.com/puppetlabs/beaker.git'
+    gem "beaker-rspec", :git => 'https://github.com/puppetlabs/beaker-rspec.git'
+    gem "vagrant-wrapper"
+    gem 'serverspec'
 end
 
-# vim:ft=ruby
+group :development do
+    gem "travis"
+    gem "travis-lint"
+    gem "puppet-blacksmith"
+    gem "guard-rake"
+end

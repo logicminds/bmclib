@@ -1,4 +1,5 @@
 pkg/
+/bundle
 .idea
 .DS_Store
 metadata.json
