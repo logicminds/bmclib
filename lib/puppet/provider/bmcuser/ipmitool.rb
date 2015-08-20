@@ -156,9 +156,11 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
 
   def self.prefetch(resources)
     users = instances
-    resources.keys.each do | name|
-      if provider = users.find{|user| user.name == name }
-        resources[name].provider = provider
+    unless users
+      resources.keys.each do | name|
+        if provider = users.find{|user| user.name == name }
+          resources[name].provider = provider
+        end
       end
     end
   end

@@ -66,9 +66,11 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
 
   def self.prefetch(resources)
     devices = instances
-    resources.keys.each do | name|
-      if provider = devices.find{|device| device.name == name }
-        resources[name].provider = provider
+    unless devices
+      resources.keys.each do | name|
+        if provider = devices.find{|device| device.name == name }
+          resources[name].provider = provider
+        end
       end
     end
   end
