@@ -2,11 +2,10 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
   desc "Provides ipmitool support for the bmc type"
 
   commands :ipmitoolcmd => 'ipmitool'
+  # if the open ipmi driver does not exist we can perform any of these configurations
+  # check to see that openipmi driver is loaded and ipmi device exists
   confine :bmc_device_present => [:true, true]
   confine :is_virtual => "false"
-  # if the open ipmi driver does not exist we can perform any of these configurations
-  #      # check to see that openipmi driver is loaded and ipmi device exists
-  confine :true => File.exists?('/dev/ipmi0') || File.exists?('/dev/ipmi/0') || File.exists?('/dev/ipmidev/0')
 
   CHANNEL_LOOKUP = {
       'Dell Inc.'         => '1',
