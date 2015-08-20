@@ -33,12 +33,12 @@ Facter.add("bmc_gateway", :timeout => 2) do
 end
 
 def lanconfig
-  @lanconfig ||= parse_laninfo
+  @lanconfig ||= parse_laninfo_ipmitool || parse_laninfo_freeipmi || {}
 end
 
-def parse_laninfo
-  if ipmitool.empty?
-    return {}
+def parse_laninfo_ipmitool
+  if ! ipmitool
+    return
   end
   channel_lookup = {
     'Dell Inc.'         => 1,
@@ -61,8 +61,22 @@ def parse_laninfo
   return laninfo
 end
 
+def parse_laninfo_freeipmi
+  if ! bmc_config
+    return
+  end
+  output = Facter::Util::Resolution.exec("bmc-config --checkout --section Lan_Conf --disable-auto-probe --verbose").lines.find_all { |l| l =~ /^\s+[^#]/}
+  if ! output.empty?
+    Hash[output.map { |e| e.downcase.split }]
+  end
+end
+
 def ipmitool
-  @ipmitool ||= Facter::Core::Execution.which('ipmitool')
+  Facter::Util::Resolution.which('ipmitool')
+end
+
+def bmc_config
+  Facter::Util::Resolution.which('bmc-config')
 end
 
 def ip
@@ -78,15 +92,15 @@ def subnet
 end
 
 def gateway
-  lanconfig["default_gateway_ip"]
+  lanconfig["default_gateway_ip"] || lanconfig["default_gateway_ip_address"]
 end
 
 def vlanid
-  lanconfig["802.1q_vlan_id"]
+  lanconfig["802.1q_vlan_id"] || lanconfig["vlan_id"]
 end
 
 def dhcp?
-  lanconfig["ip_address_source"].match(/dhcp/i) != nil
+  lanconfig["ip_address_source"].match(/dhcp$/i) != nil
 end
 
 def static?
