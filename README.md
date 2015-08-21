@@ -56,16 +56,16 @@ include 'bmclib'
 ```
 
 ```puppet
-bmc { 'ipmidevice':
-  ensure   => enabled,
-  vlanid   => '1',
-  ip       => '192.168.1.22',
-  netmask  => '255.255.255.0',
+bmc { '78:e7:d1:7d:20:cc':
+  ensure   => 'present',
   gateway  => '192.168.1.1',
-  snmp     => 'public',
-  force    => true,
-  require  => Class['bmclib'],
+  ip       => '192.168.1.25',
+  ipsource => 'static',
+  netmask  => '255.255.255.0',
+  vlanid   => 'off',
+  require  => Class['bmclib']
 }
+
 ```
 
 ```puppet
@@ -100,6 +100,18 @@ bmcuser { 'bmcuser'
 - bmcuser  (adds user to bmc device)
 - bmc      (configures bmc device on network)
 
+### Using the Puppet Ral
+```
+[root@g6 bmclib]# puppet resource bmc
+bmc { '78:e7:d1:7d:20:cc':
+  ensure   => 'present',
+  gateway  => '192.168.1.1',
+  ip       => '192.168.1.25',
+  ipsource => 'static',
+  netmask  => '255.255.255.0',
+  vlanid   => 'off',
+}
+```
 ### Providers Available
 - ipmitool
 
@@ -123,6 +135,11 @@ bmcuser { 'bmcuser'
 - userpass: the password of the bmc user to add
 - force: force set the parameters during each puppet run
 
+## Status
+This module has been broken for a while, but since I didn't have time to maintain it stayed broken.
+With the most recent update the bmc provider now works great.  So if you were using this before and 
+it didn't work, git it a try now.
+As of now the bmcuser provider is still broken until I can find some free time.
 
 ##Limitations
 Works on *nix systems or whatever can run openipmi and ipmitool.
