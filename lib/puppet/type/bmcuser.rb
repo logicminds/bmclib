@@ -2,14 +2,26 @@ Puppet::Type.newtype(:bmcuser) do
   @doc = "Manage BMC devices"
 
 
-  ensurable
+  ensurable do
+    newvalue(:present) do
+      provider.create
+    end
 
-  newparam(:name, :namevar=>true) do
-    desc "The name of the resource"
-
+    newvalue(:absent) do
+      provider.destroy
+    end
   end
 
-  newproperty(:username) do
+  newproperty(:id) do
+    defaultto(:auto)
+    desc 'The id of the user, gathered from the bmc user list'
+  end
+
+  newparam(:name) do
+    desc 'The name of the resource'
+  end
+
+  newproperty(:username, :namevar => true) do
     desc "The username to be added"
 
   end
@@ -26,13 +38,7 @@ Puppet::Type.newtype(:bmcuser) do
 
   newproperty(:privlevel) do
     desc "The privilege level type for the user"
-    newvalues(:admin, :user, :operator, :callback, :administrator, :noaccess)
-  end
-
-  newparam(:provider) do
-    desc "The type of ipmi provider to use when setting up the bmc"
-    newvalues(:ipmitool)
-    defaultto(:ipmitool)
+    newvalues(:ADMIN, :USER, :OPERATOR, :CALLBACK, :ADMINISTRATOR, :NOACCESS)
   end
 
 end
