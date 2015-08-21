@@ -33,6 +33,9 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
         enable_channel  # TODO is this needed? what does this do ?
       end
     end
+    # resets the interface
+    Puppet.debug('rebooting the bmc device')
+    ipmitoolcmd(['bmc', 'reset', 'cold'])
   end
 
   ##### These are the default ensurable methods that must be implemented
