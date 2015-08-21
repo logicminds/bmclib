@@ -16,6 +16,24 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
       'HP'                => '2',
       'Intel Corporation' => '3',
   }
+  def initialize(value={})
+    super(value)
+    @property_flush = {}
+  end
+
+  # the flush method will be the last method called after applying all the other
+  # properties, by default nothing will be enabled or disabled unless the disable/enable are set to true
+  # if we ever move to a point were we can write all the settings via one big config file we
+  # would want to do that here.
+  def flush
+    if @property_flush
+      if @property_flush[:disable]
+        disable_channel  #TODO is this needed?
+      elsif @property_flush[:enable]
+        enable_channel  # TODO is this needed? what does this do ?
+      end
+    end
+  end
 
   ##### These are the default ensurable methods that must be implemented
   def install
@@ -29,12 +47,11 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
     if resource[:vlanid]
       vlanid = resource[:vlanid]
     end
-    enable_channel  # TODO is this needed? what does this do ?
   end
 
   def remove
     ipsource = "dhcp"
-    disable_channel  #TODO is this needed?
+
   end
 
   def exists?
