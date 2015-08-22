@@ -111,6 +111,20 @@ bmc { '78:e7:d1:7d:20:cc':
   netmask  => '255.255.255.0',
   vlanid   => 'off',
 }
+[root@g6 bmclib]# puppet resource bmcuser
+bmcuser { 'Administrator':
+  ensure    => 'present',
+  id        => '1',
+  privlevel => 'ADMINISTRATOR',
+  userpass  => '*************',
+}
+bmcuser { 'admin':
+  ensure    => 'present',
+  id        => '2',
+  privlevel => 'ADMINISTRATOR',
+  userpass  => '*************',
+}
+
 ```
 ### Providers Available
 - ipmitool
@@ -135,15 +149,12 @@ bmc { '78:e7:d1:7d:20:cc':
 - userpass: the password of the bmc user to add
 - force: force set the parameters during each puppet run
 
-## Status
-This module has been broken for a while, but since I didn't have time to maintain it stayed broken.
-With the most recent update the bmc provider now works great.  So if you were using this before and 
-it didn't work, git it a try now.
-As of now the bmcuser provider is still broken until I can find some free time.
-
 ##Limitations
 Works on *nix systems or whatever can run openipmi and ipmitool.
 Not all linux operating systems are listed in the support metadata.  YMMV.
+
+Currently the output will show sensitive information like when using bmcuser: 
+`Notice: /Stage[main]/Main/Bmcuser[testuser]/userpass: userpass changed '**Hidden**' to 'password'`
 
 ## Contributors
 * Corey Osman <corey@logicminds.biz>  (Original Author)
