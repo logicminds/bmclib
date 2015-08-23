@@ -61,7 +61,12 @@ def parse_laninfo
 end
 
 def ipmitool
-  @ipmitool ||= Facter::Core::Execution.which('ipmitool')
+  if !@ipmitool
+    timeout = Facter::Core::Execution.which('timeout')
+    ipmitool = Facter::Core::Execution.which('ipmitool')
+    @ipmitool = "#{timeout} 2 #{ipmitool}"
+  end
+  @ipmitool
 end
 
 def ip
