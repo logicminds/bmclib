@@ -6,10 +6,10 @@ describe :bmc_ip, :type => :fact do
     Facter.clear
     # stub the default values
     allow(Facter::Core::Execution).to receive(:exec).and_return('')
-    allow(Facter::Core::Execution).to receive(:which).and_return('')
-    allow(Facter::Core::Execution).to receive(:exec).with('/usr/bin/ipmitool lan print 2 2>/dev/null').and_return(@data)
-    allow(Facter::Core::Execution).to receive(:exec).with('/usr/bin/ipmitool lan print 1 2>/dev/null').and_return(@data)
+    allow(Facter::Core::Execution).to receive(:which).with('timeout').and_return('/bin/timeout')
     allow(Facter::Core::Execution).to receive(:which).with('ipmitool').and_return('/usr/bin/ipmitool')
+    allow(Facter::Core::Execution).to receive(:exec).with('/bin/timeout 2 /usr/bin/ipmitool lan print 2 2>/dev/null').and_return(@data)
+    allow(Facter::Core::Execution).to receive(:exec).with('/bin/timeout 2 /usr/bin/ipmitool lan print 1 2>/dev/null').and_return(@data)
     allow(Facter).to receive(:value).with(:manufacturer).and_return('HP')
     allow(Facter).to receive(:value).with(:kernel).and_return('Linux')
     allow(Facter).to receive(:value).with(anything)
