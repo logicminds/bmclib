@@ -14,7 +14,6 @@ describe :bmc_ip, :type => :fact do
     allow(Facter).to receive(:value).with(:kernel).and_return('Linux')
     allow(Facter).to receive(:value).with(anything)
     allow(Facter).to receive(:[]).with(anything)
-
   end
 
 
@@ -24,46 +23,28 @@ describe :bmc_ip, :type => :fact do
     end
   end
 
-  describe :is_virtual do
+  describe :without_bmc_device do
+    before :each do
+      bdp = double(Facter::Util::Fact)
+      allow(bdp).to receive(:value).and_return(false)
+      allow(Facter).to receive(:[]).with(:bmc_device_present).and_return(bdp)
+    end
+    it 'should not contain ip' do
+      expect(Facter.fact(:bmc_ip).value.nil?).to be true
+    end
+
+    it 'should not contain ip' do
+      expect(Facter.fact(:bmc_ip).value.nil?).to be true
+    end
+  end
+  describe :with_bmc_device do
     before :each do
       bdp = double(Facter::Util::Fact)
       allow(bdp).to receive(:value).and_return(true)
       allow(Facter).to receive(:[]).with(:bmc_device_present).and_return(bdp)
     end
-    describe :boolean_true do
-      it 'should not contain ip' do
-        iv = double(Facter::Util::Fact)
-        allow(iv).to receive(:value).and_return(true)
-        allow(Facter).to receive(:[]).with(:is_virtual).and_return(iv)
-        expect(Facter.fact(:bmc_ip).value.nil?).to be true
-      end
-    end
-
-    describe :true do
-      it 'should not contain ip' do
-        iv = double(Facter::Util::Fact)
-        allow(iv).to receive(:value).and_return(:true)
-        allow(Facter).to receive(:[]).with(:is_virtual).and_return(iv)
-        expect(Facter.fact(:bmc_ip).value.nil?).to be true
-      end
-    end
-
-    describe :false do
-      it 'should contain ip' do
-        iv = double(Facter::Util::Fact)
-        allow(iv).to receive(:value).and_return(:false)
-        allow(Facter).to receive(:[]).with(:is_virtual).and_return(iv)
-        expect(Facter.fact(:bmc_ip).value).to eq('192.168.1.41')
-      end
-    end
-
-    describe :boolean_false do
-      it 'should contain ip' do
-        iv = double(Facter::Util::Fact)
-        allow(iv).to receive(:value).and_return(false)
-        allow(Facter).to receive(:[]).with(:is_virtual).and_return(iv)
-        expect(Facter.fact(:bmc_ip).value).to eq('192.168.1.41')
-      end
+    it 'should contain ip' do
+      expect(Facter.fact(:bmc_ip).value).to eq('192.168.1.41')
     end
   end
 end

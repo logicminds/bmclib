@@ -66,7 +66,6 @@ Cipher Suite Priv Max   : XXXXXXXXXXXXXXX
       before :each do
         Facter.clear
         facts.merge!(:bmc_device_present => true)
-        facts.merge!(:is_virtual => false)
         facts.each do |k, v|
           allow(Facter).to receive(:fact).with(k).and_return Facter.add(k) { setcode { v } }
         end

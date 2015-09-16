@@ -1,6 +1,5 @@
 #bmc.rb
 Facter.add("bmc_ip", :timeout => 2) do
-  confine :is_virtual => [:false, false]
   confine :bmc_device_present => [:true, true]
   setcode do
     ip
@@ -8,7 +7,6 @@ Facter.add("bmc_ip", :timeout => 2) do
 end
 
 Facter.add("bmc_mac", :timeout => 2) do
-  confine :is_virtual => [:false, false]
   confine :bmc_device_present => [:true, true]
   setcode do
     mac
@@ -16,7 +14,6 @@ Facter.add("bmc_mac", :timeout => 2) do
 end
 
 Facter.add("bmc_subnet", :timeout => 2) do
-  confine :is_virtual => [:false, false]
   confine :bmc_device_present => [:true, true]
   setcode do
     subnet
@@ -24,7 +21,6 @@ Facter.add("bmc_subnet", :timeout => 2) do
 end
 
 Facter.add("bmc_gateway", :timeout => 2) do
-  confine :is_virtual => [:false, false]
   confine :bmc_device_present => [:true, true]
   setcode do
     gateway

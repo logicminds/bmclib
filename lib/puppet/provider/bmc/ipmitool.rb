@@ -5,7 +5,6 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   # if the open ipmi driver does not exist we can perform any of these configurations
   # check to see that openipmi driver is loaded and ipmi device exists
   confine :bmc_device_present => [:true, true]
-  confine :is_virtual => "false"
 
   mk_resource_methods
 
