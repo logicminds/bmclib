@@ -75,14 +75,15 @@ Cipher Suite Priv Max   : XXXXXXXXXXXXXXX
       it "should be an instance of Puppet::Type::Bmc::Ipmitool" do
         expect(@provider).to be_an_instance_of Puppet::Type::Bmc::ProviderIpmitool
       end
-      it 'enables the channel' do
-        expect(subject).to receive(:ipmitoolcmd).with(["lan", "set", "1", "access", "on"])
-        @provider.install
-      end
+      # disableing until we figure out if we should enable/disable the channel
+      # xit 'enables the channel' do
+      #   expect(subject).to receive(:ipmitoolcmd).with(["lan", "set", "1", "access", "on"])
+      #   @provider.install
+      # end
 
       it 'should set the ipsource' do
         expect(subject).to receive(:ipmitoolcmd).with([ "lan", "set", "1", "ipsrc", "dhcp" ])
-        @provider.set_ipsource('dhcp')
+        @provider.ipsource = 'dhcp'
       end
 
       describe 'HP device' do
@@ -90,27 +91,14 @@ Cipher Suite Priv Max   : XXXXXXXXXXXXXXX
            allow(Facter).to receive(:value).with(:manufacturer).and_return('HP')
         end
 
-        it 'get ipsource' do
-          expect(subject).to receive(:ipmitoolcmd).with([ "lan", "print", "2"])
-          @provider.ipsource
-        end
-
         it 'should set the ipsource' do
           expect(subject).to receive(:ipmitoolcmd).with([ "lan", "set", "2", "ipsrc", "dhcp" ])
-          @provider.set_ipsource('dhcp')
+          @provider.ipsource = 'dhcp'
         end
 
       end
     end
   end
-
-
-
-
-
-
-
-
 end
 
 

@@ -9,7 +9,7 @@ describe provider_class do
   let (:resource) { Puppet::Type.type(:bmcuser).new(
       :provider => 'ipmitool',
       :userpass => 'supersecret',
-      :privlevel => 'admin',
+      :privlevel => 'ADMIN',
       :username => "testuser",
       :name => "testuser")
   }
@@ -29,7 +29,7 @@ describe provider_class do
     expect(provider).to be_an_instance_of Puppet::Type::Bmcuser::ProviderIpmitool
   end
 
-  [:admin, :user, :operator, :callback, :administrator, :noaccess].each do |priv|
+  [:ADMIN, :USER, :OPERATOR, :CALLBACK, :ADMINISTRATOR, :NOACCESS].each do |priv|
     context "privilege for type #{priv} should be supported" do
 
       let (:resource) { Puppet::Type.type(:bmcuser).new(

@@ -37,8 +37,8 @@ describe Puppet::Type.type(:bmcuser) do
 
   describe 'privlevel property' do
      it 'should return the privlevel' do
-       user = Puppet::Type.type(:bmcuser).new(:name => "Stan", :ensure => :present, :privlevel => 'admin')
-       expect(user.should(:privlevel)).to eq(:admin)
+       user = Puppet::Type.type(:bmcuser).new(:name => "Stan", :ensure => :present, :privlevel => 'ADMIN')
+       expect(user.should(:privlevel)).to eq(:ADMIN)
      end
   end
 
