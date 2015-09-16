@@ -37,6 +37,7 @@ Puppet::Type.newtype(:bmcuser) do
 
   newproperty(:privlevel) do
     desc "The privilege level type for the user"
+    defaultto :ADMIN
     newvalues(:ADMIN, :USER, :OPERATOR, :CALLBACK, :ADMINISTRATOR, :NOACCESS)
   end
 
