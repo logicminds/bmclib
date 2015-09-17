@@ -70,7 +70,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
         :netmask  => info["subnet mask"],
         :gateway  => info["default gateway ip"],
         :vlanid   => info["802.1q vlan id"],
-        :ipsource => info["ip address source"],
+        :ipsource => info["ip address source"]
     )
     [inst]
   end
