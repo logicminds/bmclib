@@ -87,9 +87,10 @@ bmcuser { 'bmcuser'
 - bmc_mac => 00:17:A4:49:AB:70
 - bmc_subnet => 255.255.255.0
 - bmc_device_present => false or true
+- bmc_tools_present  => false or true
 
 ```puppet 
-   if not bmc_device_present {
+   if not $::bmc_device_present {
       exec{"Purchase better hardware":
         command => 'echo "We need better hardware boss! | mail -s "help us!" boss@compan.com'
       }
@@ -138,7 +139,6 @@ bmcuser { 'admin':
 - netmask:the netmask of the bmc device (required)
 - gateway: the gateway of the bmc device (required)
 - snmp:the snmp public community string for the bmc device
-- force: force set the parameters during each puppet run
 
 ### Parameters for bmcuser type
 
@@ -153,7 +153,7 @@ bmcuser { 'admin':
 Works on *nix systems or whatever can run openipmi and ipmitool.
 Not all linux operating systems are listed in the support metadata.  YMMV.
 
-Currently the output will show sensitive information like when using bmcuser: 
+Currently the output will show sensitive information when using bmcuser: 
 `Notice: /Stage[main]/Main/Bmcuser[testuser]/userpass: userpass changed '**Hidden**' to 'password'`
 
 ## Contributors
