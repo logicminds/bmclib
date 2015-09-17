@@ -10,6 +10,7 @@ group :test do
     gem 'hiera-puppet-helper', :git => 'https://github.com/bobtfish/hiera-puppet-helper.git'
     gem "metadata-json-lint"
     gem 'puppet-syntax'
+    gem 'pry'
     gem 'puppet-lint'
     gem 'rspec-puppet-facts', :require => false
 end
