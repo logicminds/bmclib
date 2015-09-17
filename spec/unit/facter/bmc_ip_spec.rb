@@ -26,6 +26,7 @@ describe :bmc_ip, :type => :fact do
       bdp = double(Facter::Util::Fact)
       allow(bdp).to receive(:value).and_return(false)
       allow(Facter).to receive(:[]).with(:bmc_device_present).and_return(bdp)
+      allow(Facter).to receive(:[]).with(:bmc_tools_present).and_return(bdp)
     end
     it 'should not contain ip' do
       expect(Facter.fact(:bmc_ip).value.nil?).to be true
@@ -40,6 +41,7 @@ describe :bmc_ip, :type => :fact do
       bdp = double(Facter::Util::Fact)
       allow(bdp).to receive(:value).and_return(true)
       allow(Facter).to receive(:[]).with(:bmc_device_present).and_return(bdp)
+      allow(Facter).to receive(:[]).with(:bmc_tools_present).and_return(bdp)
     end
     it 'should contain ip' do
       expect(Facter.fact(:bmc_ip).value).to eq('192.168.1.41')
