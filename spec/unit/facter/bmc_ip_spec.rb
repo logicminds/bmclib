@@ -8,16 +8,14 @@ describe :bmc_ip, :type => :fact do
     allow(Facter::Core::Execution).to receive(:exec).and_return('')
     allow(Facter::Core::Execution).to receive(:which).with('timeout').and_return('/bin/timeout')
     allow(Facter::Core::Execution).to receive(:which).with('ipmitool').and_return('/usr/bin/ipmitool')
-    allow(Facter::Core::Execution).to receive(:exec).with('/bin/timeout 2 /usr/bin/ipmitool lan print 2 2>/dev/null').and_return(@data)
-    allow(Facter::Core::Execution).to receive(:exec).with('/bin/timeout 2 /usr/bin/ipmitool lan print 1 2>/dev/null').and_return(@data)
+    allow(Facter::Core::Execution).to receive(:exec).with('/bin/timeout 2 /usr/bin/ipmitool lan print 2 2>/dev/null').and_return(data)
+    allow(Facter::Core::Execution).to receive(:exec).with('/bin/timeout 2 /usr/bin/ipmitool lan print 1 2>/dev/null').and_return(data)
     allow(Facter).to receive(:value).with(:manufacturer).and_return('HP')
     allow(Facter).to receive(:value).with(:kernel).and_return('Linux')
     allow(Facter).to receive(:value).with(anything)
     allow(Facter).to receive(:[]).with(anything)
   end
-
-
-  before :all do
+  let(:data) do
     File.open("spec/fixtures/ipmitool/lan.txt",'r') do |file|
       @data = file.read
     end
@@ -45,6 +43,23 @@ describe :bmc_ip, :type => :fact do
     end
     it 'should contain ip' do
       expect(Facter.fact(:bmc_ip).value).to eq('192.168.1.41')
+    end
+
+    describe 'when timeout occurs and value is empty' do
+      let(:data) do
+        ''
+      end
+      it 'should not contain ip' do
+        expect(Facter.fact(:bmc_ip).value).to eq(nil)
+      end
+    end
+    describe 'when timeout occurs and value is nil' do
+      let(:data) do
+        nil
+      end
+      it 'should not contain ip' do
+        expect(Facter.fact(:bmc_ip).value).to eq(nil)
+      end
     end
   end
 end

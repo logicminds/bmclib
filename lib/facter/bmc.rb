@@ -32,7 +32,7 @@ def lanconfig
 end
 
 def parse_laninfo
-  if ipmitool.empty?
+  if ipmitool.empty? or ipmitool.nil?
     return {}
   end
   channel_lookup = {
@@ -43,9 +43,8 @@ def parse_laninfo
     'Intel Corporation' => 3,
   }
   channel = channel_lookup.fetch(Facter.value(:manufacturer), 1)
-  landata = Facter::Core::Execution.exec("#{ipmitool} lan print #{channel} 2>/dev/null")
+  landata = Facter::Core::Execution.exec("#{ipmitool} lan print #{channel} 2>/dev/null") || ''
   laninfo = {}
-
   landata.lines.each do |line|
     # clean up the data from spaces
     item = line.split(':', 2)
@@ -53,14 +52,20 @@ def parse_laninfo
     value = item.last.strip
     laninfo[key] = value
   end
-  return laninfo
+  laninfo
 end
 
 def ipmitool
   unless @ipmitool
     timeout = Facter::Core::Execution.which('timeout')
-    ipmitool = Facter::Core::Execution.which('ipmitool')
-    @ipmitool = "#{timeout} 2 #{ipmitool}"
+    ipmitool_cmd = Facter::Core::Execution.which('ipmitool')
+    if ipmitool_cmd and timeout
+      @ipmitool = "#{timeout} 2 #{ipmitool_cmd}"
+    elsif ipmitool_cmd
+      @ipmitool = ipmitool_cmd
+    else
+      @ipmitool = nil
+    end
   end
   @ipmitool
 end
