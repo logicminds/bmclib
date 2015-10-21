@@ -27,7 +27,9 @@ Puppet::Type.newtype(:bmcuser) do
 
   newproperty(:userpass) do
     desc "The password of the user to create"
-
+    def change_to_s(current, desire)
+      "userpass is different, changing to specified password"
+    end
   end
 
   newparam(:force) do
