@@ -2,22 +2,20 @@ source "https://rubygems.org"
 
 group :test do
     gem "rake"
-    gem "puppet", ENV['PUPPET_VERSION'] || '~> 3.7.3'
-    gem 'facter', '~> 2'
-    gem "rspec-puppet", :git => 'https://github.com/rodjek/rspec-puppet.git'
+    gem "puppet", ENV['PUPPET_VERSION'] || '~> 3.8.3'
+    gem "rspec-puppet"
     gem "puppetlabs_spec_helper"
     gem 'rspec-puppet-utils', :git => 'https://github.com/Accuity/rspec-puppet-utils.git'
     gem 'hiera-puppet-helper', :git => 'https://github.com/bobtfish/hiera-puppet-helper.git'
     gem "metadata-json-lint"
     gem 'puppet-syntax'
-    gem 'pry'
     gem 'puppet-lint'
-    gem 'rspec-puppet-facts', :require => false
+    gem 'rspec-puppet-facts'
 end
 
 group :integration do
-    gem "beaker", :git => 'https://github.com/puppetlabs/beaker.git'
-    gem "beaker-rspec", :git => 'https://github.com/puppetlabs/beaker-rspec.git'
+    gem "beaker"
+    gem "beaker-rspec"
     gem "vagrant-wrapper"
     gem 'serverspec'
 end
