@@ -26,18 +26,11 @@ describe 'bmclib', :type => 'class' do
       :enable     => 'true',
       :hasrestart => 'true',
       :hasstatus  => 'true',
-      :require    => [ 'Package[ipmitool]', 'Package[ipmidriver]' ]
     )}
-    it { is_expected.to contain_file('/etc/sysconfig/ipmi').with(
-      :ensure  => 'present',
+    it { is_expected.to contain_file('ipmiconfig').with(
+      :ensure  => 'file',
       :path    => '/etc/sysconfig/ipmi',
-      :notify  => 'Service[ipmi]'
     )}
-#    it 'should contain File[/etc/sysconfig/ipmi] with correct contents' do
-#      verify_contents(subject, '/etc/sysconfig/ipmi', [
-#        '',
-#      ])
-#    end
   end
 
   context 'on a Debian osfamily' do
@@ -62,13 +55,11 @@ describe 'bmclib', :type => 'class' do
       :enable     => 'true',
       :hasrestart => 'true',
       :hasstatus  => 'true',
-      :require    => [ 'Package[ipmitool]', 'Package[ipmidriver]' ]
     )}
-    it { is_expected.to contain_file('/etc/default/ipmi').with(
-      :ensure  => 'present',
+    it { is_expected.to contain_file('ipmiconfig').with(
+      :ensure  => 'file',
       :path    => '/etc/default/ipmi',
       :content => 'ENABLED=true',
-      :notify  => 'Service[openipmi]'
     )}
   end
 

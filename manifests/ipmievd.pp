@@ -20,31 +20,36 @@
 #
 # Copyright (C) 2013 Mike Arnold, unless otherwise noted.
 #
-class bmclib::ipmievd {
+class bmclib::ipmievd (
+  $service_ensure = 'running',
+  $manage_service = true,
+){
   require 'bmclib'
 
   case $::osfamily {
     'Debian': {
-      file { '/etc/default/ipmievd':
-        ensure  => 'present',
+      file { 'ipmievdconfig':
+        ensure  => file,
+        path    => '/etc/default/ipmievd',
         content => 'ENABLED=true',
-        notify  => Service['ipmievd'],
       }
     }
     'RedHat': {
-      file { '/etc/sysconfig/ipmievd':
-        ensure => 'present',
-#        content => 'IPMIEVD_OPTIONS="sel pidfile=/var/run/ipmievd.pid"',
-        notify => Service['ipmievd'],
+      file { 'ipmievdconfig':
+        ensure => file,
+        path   => '/etc/sysconfig/ipmievd',
       }
     }
     default: { }
   }
 
-  service { 'ipmievd':
-    ensure     => 'running',
-    enable     => true,
-    hasrestart => true,
-    hasstatus  => true,
+  if $manage_service {
+    service { 'ipmievd':
+      ensure     => 'running',
+      enable     => true,
+      hasrestart => true,
+      hasstatus  => true,
+      subscribe  => File['ipmievdconfig'],
+    }
   }
 }

@@ -25,7 +25,9 @@
 # [Remember: No empty lines between comments and class definition]
 class bmclib (
   $service_ensure = 'running',
-  $package_ensure = 'latest'
+  $manage_service = true,
+  $package_ensure = 'latest',
+  $manage_package = true
 ) {
 
   case $::osfamily {
@@ -34,9 +36,9 @@ class bmclib (
       $openipmi = 'openipmi'
       $service_name = 'openipmi'
 
-      file { '/etc/default/ipmi':
-        ensure  => 'present',
-        notify  => Service[$service_name],
+      file { 'ipmiconfig':
+        ensure  => file,
+        path    => '/etc/default/ipmi',
         content => 'ENABLED=true',
       }
     }
@@ -44,9 +46,9 @@ class bmclib (
       $openipmi = 'OpenIPMI'
       $service_name = 'ipmi'
 
-      file { '/etc/sysconfig/ipmi':
-        ensure => 'present',
-        notify => Service[$service_name],
+      file { 'ipmiconfig':
+        ensure => file,
+        path   => '/etc/sysconfig/ipmi',
       }
     }
     default: {
@@ -56,21 +58,31 @@ class bmclib (
     }
   }
 
-  package { 'ipmitool':
-    ensure => $package_ensure,
-    name   => 'ipmitool',
+  if $manage_package {
+    package { 'ipmitool':
+      ensure => $package_ensure,
+      name   => 'ipmitool',
+    }
+
+    package { 'ipmidriver':
+      ensure => $package_ensure,
+      name   => $openipmi,
+    }
+
+    # See resource collection
+    # https://docs.puppetlabs.com/puppet/latest/reference/lang_collectors.html
+    Service <| $title == $service_name |> {
+      subscribe +> [Package['ipmitool'], Package['ipmidriver']],
+    }
   }
 
-  package { 'ipmidriver':
-    ensure => $package_ensure,
-    name   => $openipmi,
-  }
-
-  service { $service_name:
-    ensure     => $service_ensure,
-    enable     => true,
-    hasrestart => true,
-    hasstatus  => true,
-    require    => [ Package['ipmitool'], Package['ipmidriver']],
+  if $manage_service {
+    service { $service_name:
+      ensure     => $service_ensure,
+      enable     => true,
+      hasrestart => true,
+      hasstatus  => true,
+      subscribe  => File['ipmiconfig'],
+    }
   }
 }
