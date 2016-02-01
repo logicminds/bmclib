@@ -1,3 +1,6 @@
+before_install:
+  # https://github.com/bundler/bundler/issues/3558
+  gem update bundler
 branches:
   only:
     - master
