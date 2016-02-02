@@ -2,48 +2,12 @@
   "name": "logicminds-bmclib",
   "author": "Corey Osman",
   "description": "Puppet type for controlling the bmc as well as other useful facts",
-  "license": "LGPL-2.1+",
+  "license": "LGPL-2.1",
   "project_page": "http://www.github.com/logicminds/bmclib",
   "source": "https://github.com/logicminds/bmclib.git",
   "summary": "The bmclib is a module that automates deployment of ipmi devices and provides other useful types",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "issues_url": "https://github.com/logicminds/bmclib/issues",
-  "types": [
-    {
-      "parameters": [
-        {
-          "name": "user1",
-          "doc": "The username to be added"
-        },
-        {
-          "name": "user1pass"
-        },
-        {
-          "name": "ip"
-        },
-        {
-          "name": "bootdevice"
-        },
-        {
-          "name": "subnet"
-        },
-        {
-          "name": "gateway"
-        },
-        {
-          "name": "channel"
-        },
-        {
-          "name": "vlanid"
-        },
-        {
-          "name": "channel"
-        }
-      ],
-      "name": "bmc",
-      "doc": "Manage BMC devices"
-    }
-  ],
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",
