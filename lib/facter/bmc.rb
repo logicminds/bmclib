@@ -31,8 +31,29 @@ Facter.add("bmc_gateway", :timeout => 2) do
   end
 end
 
+Facter.add("bmc_ipmi_version") do
+  confine :bmc_device_present => [:true, true]
+  confine :bmc_tools_present => [:true, true]
+  setcode do
+    ipmi_version
+  end
+end
+
+Facter.add("bmc_firmware_revision") do
+  confine :bmc_device_present => [:true, true]
+  confine :bmc_tools_present => [:true, true]
+  setcode do
+    firmware_revision
+  end
+end
+
+
 def lanconfig
   @lanconfig ||= parse_laninfo
+end
+
+def mcconfig
+  @mcconfig ||= parse_mcinfo
 end
 
 def parse_laninfo
@@ -57,6 +78,22 @@ def parse_laninfo
     laninfo[key] = value
   end
   laninfo
+end
+
+def parse_mcinfo
+  if ipmitool.empty? or ipmitool.nil?
+    return {}
+  end
+  mcdata = Facter::Core::Execution.exec("#{ipmitool} mc info 2>/dev/null") || ''
+  mcinfo = {}
+  mcdata.lines.each do |line|
+    # clean up the data from spaces
+    item = line.split(':', 2)
+    key = item.first.strip.downcase.gsub(' ','_')
+    value = item.last.strip
+    mcinfo[key] = value
+  end
+  mcinfo
 end
 
 def ipmitool
@@ -104,4 +141,12 @@ end
 
 def ipsrc
   lanconfig["ip_address_source"].downcase!
+end
+
+def firmware_revision
+  mcconfig["firmware_revision"]
+end
+
+def ipmi_version
+  mcconfig["ipmi_version"]
 end
