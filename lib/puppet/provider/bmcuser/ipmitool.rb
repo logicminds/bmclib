@@ -39,7 +39,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
   # get the user id supplied by the resource or find out the current user id
   # if a user id cannot be found, try and create a new user id by looking for empty slots
   def id
-   @id ||= @property_hash[:id] || user_id(resource[:username])
+   @id ||= @property_hash[:id] || @resource[:id] || user_id(resource[:username])
   end
 
   def destroy
