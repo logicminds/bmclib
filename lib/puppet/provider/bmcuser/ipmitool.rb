@@ -114,6 +114,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
       # skip the header
       next if line.match(/^ID/)
       next if line.match(/Empty/i)
+      next if line.match(/^1/)
       id, name, callin, linkauth, enabled, priv = line.chomp.split(' ', 6)
       # create the resource
       users << new(:name => name, :username => name, :id => id, :ensure => :present,
