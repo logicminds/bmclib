@@ -76,7 +76,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
 
   def users
     unless @users
-      userdata = ipmitoolcmd([ "user", "list", CHANNEL_LOOKUP.fetch(Facter.value(:manufacturer), '1')])
+      userdata = ipmitoolcmd([ "user", "list", CHANNEL_LOOKUP.fetch(Facter.value(:dmi)['board']['manufacturer'], '1')])
       @users = []
       userdata.lines.each do | line|
         # skip the header
@@ -108,7 +108,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
   end
 
   def self.instances
-    userdata = ipmitoolcmd([ "user", "list", CHANNEL_LOOKUP.fetch(Facter.value(:manufacturer), '1')])
+    userdata = ipmitoolcmd([ "user", "list", CHANNEL_LOOKUP.fetch(Facter.value(:dmi)['board']['manufacturer'], '1')])
     users = []
     userdata.lines.each do | line|
       # skip the header
@@ -134,7 +134,7 @@ Puppet::Type.type(:bmcuser).provide(:ipmitool) do
   end
 
   def channel
-    CHANNEL_LOOKUP.fetch(Facter.value(:manufacturer), '1')
+    CHANNEL_LOOKUP.fetch(Facter.value(:dmi)['board']['manufacturer'], '1')])
   end
 end
 

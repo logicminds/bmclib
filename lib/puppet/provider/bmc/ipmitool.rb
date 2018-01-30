@@ -97,7 +97,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   # end - bmc parameters
 
   def self.laninfo
-    landata = ipmitoolcmd([ "lan", "print", CHANNEL_LOOKUP.fetch(Facter.value(:manufacturer), '1') ])
+    landata = ipmitoolcmd([ "lan", "print", CHANNEL_LOOKUP.fetch(Facter.value(:dmi)['board']['manufacturer'], '1') ])
     info = {}
     landata.lines.each do |line|
       # clean up the data from spaces
@@ -171,7 +171,7 @@ Puppet::Type.type(:bmc).provide(:ipmitool) do
   end
 
   def channel
-    CHANNEL_LOOKUP.fetch(Facter.value(:manufacturer), '1')
+    CHANNEL_LOOKUP.fetch(Facter.value(:dmi)['board']['manufacturer'], '1')
   end
 
   def enable_channel
